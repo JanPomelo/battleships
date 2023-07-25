@@ -18,8 +18,4 @@ describe("Ship Class Test", () => {
     expect(ship.isSunk()).toBe(true);
   })
 
-/*  test("capitalize first letter", () => {
-    expect(capitalize("hallo")).toBe("Hallo");
-  });
-*/
 });
