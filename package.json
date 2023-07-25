@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "testWatch": "jest --watch *.ts",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
     "build": "webpack"
