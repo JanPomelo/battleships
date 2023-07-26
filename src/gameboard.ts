@@ -2,10 +2,11 @@
 import { Ship } from "./ship";
 
 export class Gameboard {
-  // gameBoard with 10x10 number array. 
-  board: (Ship | null)[][];
+  // gameBoard with 10x10 number array.
+  board: (Ship | null | string)[][];
   constructor() {
-    let board: Ship | null [][] = [];
+    //create the boardGame (10x10) -
+    let board: Ship | null[][] = [];
     for (let i = 0; i < 10; i++) {
       board.push([]);
       for (let j = 0; j < 10; j++) {
@@ -14,7 +15,12 @@ export class Gameboard {
     }
     this.board = board;
   }
+  // function to place a ship on the board
   placeShip(ship: Ship, direction: "Horizontal" | "Vertical", coords: number[]) {
+    /*
+    if the boat is placed horizontally, the row number is constant, so it doesnt need to be checked for corner cases
+    if the boat is placed vertically, the column number is constant, so it doesnt need to be checked for corner cases
+    */
     let shipSpaceRows: number[] = [];
     let shipSpaceCols: number[] = [];
     if (direction === "Horizontal") {
@@ -28,25 +34,27 @@ export class Gameboard {
       }
       shipSpaceRows = this._createShipPlacementArr(ship.length, coords[0]);
     }
+    // check if the space where the boat should be placed is available
     if (!this._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
       const err = new Error("Space is not available!");
       return err;
     }
+    // if yes, place the boat
     for (let i = 0; i < shipSpaceCols.length; i++) {
       this.board[shipSpaceRows[i]][shipSpaceCols[i]] = ship;
     }
-
   }
-
+  // helper function to check if the tiles where the boat should be placed are available or already occupied by another ship
   private _checkIfSpaceIsFree(row: number[], col: number[]) {
     for (let i = 0; i < row.length; i++) {
-      if (this.board[row[i]][col[i]]!= null) {
+      if (this.board[row[i]][col[i]] != null) {
         return false;
       }
     }
     return true;
   }
 
+  // helper function to cover all corner cases for the variable row/column (if the ship is placed on the outer tiles)
   private _createShipPlacementArr(shipLength: number, coordPoint: number): number[] {
     const placementArr: number[] = [];
     if (shipLength === 5) {
