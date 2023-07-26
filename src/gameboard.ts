@@ -2,19 +2,14 @@
 import { Ship } from "./ship";
 
 export class Gameboard {
-  /* gameBoard with 10x10 number array. 
-  0 = sea
-  1 = ship
-  2 = hit
-  3 = no need to hit (?)
-  */
-  board: number[][];
+  // gameBoard with 10x10 number array. 
+  board: (Ship | null)[][];
   constructor() {
-    let board: number[][] = [];
+    let board: Ship | null [][] = [];
     for (let i = 0; i < 10; i++) {
       board.push([]);
       for (let j = 0; j < 10; j++) {
-        board[i].push(0);
+        board[i].push(null);
       }
     }
     this.board = board;
@@ -38,13 +33,14 @@ export class Gameboard {
       return err;
     }
     for (let i = 0; i < shipSpaceCols.length; i++) {
-      this.board[shipSpaceRows[i]][shipSpaceCols[i]] = 1;
+      this.board[shipSpaceRows[i]][shipSpaceCols[i]] = ship;
     }
+
   }
 
   private _checkIfSpaceIsFree(row: number[], col: number[]) {
     for (let i = 0; i < row.length; i++) {
-      if (this.board[row[i]][col[i]] === 1) {
+      if (this.board[row[i]][col[i]]!= null) {
         return false;
       }
     }
