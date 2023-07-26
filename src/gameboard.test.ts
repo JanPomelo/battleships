@@ -94,4 +94,13 @@ describe("Gameboard Class Test", () => {
     expect(gameBoard.board[0][8]).toEqual(1);
     expect(gameBoard.board[0][9]).toEqual(1);
   });
+
+  test('Check double placement Error', () => {
+    const gameBoard = new Gameboard();
+    const uBoot = new Ship(3);
+    const mini = new Ship(2);
+    gameBoard.placeShip(uBoot, "Horizontal", [0, 9]);
+    expect(gameBoard.placeShip(mini, "Horizontal", [0, 9])).toEqual(Error("Space is not available!"));
+
+  }) 
 });

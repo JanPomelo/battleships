@@ -33,9 +33,22 @@ export class Gameboard {
       }
       shipSpaceRows = this._createShipPlacementArr(ship.length, coords[0]);
     }
+    if (!this._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
+      const err = new Error("Space is not available!");
+      return err;
+    }
     for (let i = 0; i < shipSpaceCols.length; i++) {
       this.board[shipSpaceRows[i]][shipSpaceCols[i]] = 1;
     }
+  }
+
+  private _checkIfSpaceIsFree(row: number[], col: number[]) {
+    for (let i = 0; i < row.length; i++) {
+      if (this.board[row[i]][col[i]] === 1) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private _createShipPlacementArr(shipLength: number, coordPoint: number): number[] {
