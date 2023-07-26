@@ -20,36 +20,58 @@ export class Gameboard {
     this.board = board;
   }
   placeShip(ship: Ship, direction: "Horizontal" | "Vertical", coords: number[]) {
+    let shipSpaceRows: number[] = [];
+    let shipSpaceCols: number[] = [];
     if (direction === "Horizontal") {
-      const shipSpaceCols: number[] = [];
-      if (ship.length === 5) {
-        if (coords[1] < 2) {
-          shipSpaceCols.push(0, 1, 2, 3, 4);
-        } else if (coords[1] > 7) {
-          shipSpaceCols.push(5, 6, 7, 8, 9);
-        } else {
-          shipSpaceCols.push(coords[1] - 2, coords[1] - 1, coords[1], coords[1] + 1, coords[1] + 2);
-        }
-        for (let i = 0; i < shipSpaceCols.length; i++) {
-          this.board[coords[0]][shipSpaceCols[i]] = 1;
-        }
+      for (let i = 0; i < ship.length; i++) {
+        shipSpaceRows.push(coords[0]);
       }
+      shipSpaceCols = this._createShipPlacementArr(ship.length, coords[1]);
+    } else {
+      for (let i = 0; i < ship.length; i++) {
+        shipSpaceCols.push(coords[1]);
+      }
+      shipSpaceRows = this._createShipPlacementArr(ship.length, coords[0]);
+    }
+    for (let i = 0; i < shipSpaceCols.length; i++) {
+      this.board[shipSpaceRows[i]][shipSpaceCols[i]] = 1;
     }
   }
 
-  private _createShipPlacementArr(
-    ship: Ship,
-    direction: "Horizontal" | "Vertical",
-    coords: number[]
-  ): {
-    rows: number[];
-    cols: number[];
-  } {
-    const rows: number[] = [];
-    const cols: number[] = [];
-    return {
-      rows: rows,
-      cols: cols,
-    };
+  private _createShipPlacementArr(shipLength: number, coordPoint: number): number[] {
+    const placementArr: number[] = [];
+    if (shipLength === 5) {
+      if (coordPoint < 2) {
+        placementArr.push(0, 1, 2, 3, 4);
+      } else if (coordPoint > 7) {
+        placementArr.push(5, 6, 7, 8, 9);
+      } else {
+        placementArr.push(coordPoint - 2, coordPoint - 1, coordPoint, coordPoint + 1, coordPoint + 2);
+      }
+    } else if (shipLength === 4) {
+      if (coordPoint < 1) {
+        placementArr.push(0, 1, 2, 3);
+      } else if (coordPoint > 7) {
+        placementArr.push(6, 7, 8, 9);
+      } else {
+        placementArr.push(coordPoint - 1, coordPoint, coordPoint + 1, coordPoint + 2);
+      }
+    } else if (shipLength === 3) {
+      if (coordPoint < 1) {
+        placementArr.push(0, 1, 2);
+      } else if (coordPoint > 8) {
+        placementArr.push(7, 8, 9);
+      } else {
+        placementArr.push(coordPoint - 1, coordPoint, coordPoint + 1);
+      }
+    } else if (shipLength === 2) {
+      if (coordPoint > 8) {
+        placementArr.push(8, 9);
+      } else {
+        placementArr.push(coordPoint, coordPoint + 1);
+      }
+    }
+
+    return placementArr;
   }
 }
