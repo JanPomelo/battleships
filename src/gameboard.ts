@@ -91,4 +91,19 @@ export class Gameboard {
 
     return placementArr;
   }
+
+  receiveAttack(coords: number[]) {
+    if (!this.board[coords[0]][coords[1]]) {
+      this.board[coords[0]][coords[1]] = "Sea";
+      return;
+    }
+    if (this.board[coords[0]][coords[1]] instanceof Ship) {
+      const ship: Ship = this.board[coords[0]][coords[1]] as Ship;
+      ship.hit();
+      this.board[coords[0]][coords[1]] = "Hit";
+      return;
+    }
+    const err = new Error(`Field ${coords[0]},${coords[1]} has already been checked`);
+    return err;
+  }
 }
