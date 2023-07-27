@@ -144,4 +144,19 @@ describe("receiveAttack tests", () => {
     expect(mini.isSunk()).toBe(true);
   });
 
+  test('check if all ships on the board are sunk', () => {
+    const gameBoard = new Gameboard();
+    const mini = new Ship(2);
+    const maxi = new Ship(5);
+    gameBoard.placeShip(mini, 'Horizontal', [0, 0]);
+    gameBoard.placeShip(maxi, "Horizontal", [9, 9]);
+    gameBoard.receiveAttack([0, 0]);
+    gameBoard.receiveAttack([0, 1]);
+    gameBoard.receiveAttack([9, 5]);
+    gameBoard.receiveAttack([9, 6]);
+    gameBoard.receiveAttack([9, 7]);
+    gameBoard.receiveAttack([9, 8]);
+    gameBoard.receiveAttack([9, 9]);
+    expect(gameBoard.allSunk()).toBe(true);
+  })
 });

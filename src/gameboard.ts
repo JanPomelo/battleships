@@ -4,6 +4,7 @@ import { Ship } from "./ship";
 export class Gameboard {
   // gameBoard with 10x10 number array.
   board: (Ship | null | string)[][];
+  ships: Ship[];
   constructor() {
     //create the boardGame (10x10) -
     let board: Ship | null[][] = [];
@@ -14,6 +15,7 @@ export class Gameboard {
       }
     }
     this.board = board;
+    this.ships = [];
   }
   // function to place a ship on the board
   placeShip(ship: Ship, direction: "Horizontal" | "Vertical", coords: number[]) {
@@ -41,6 +43,7 @@ export class Gameboard {
     }
     // if yes, place the boat
     for (let i = 0; i < shipSpaceCols.length; i++) {
+      this.ships.push(ship);
       this.board[shipSpaceRows[i]][shipSpaceCols[i]] = ship;
     }
   }
@@ -105,5 +108,15 @@ export class Gameboard {
     }
     const err = new Error(`Field ${coords[0]},${coords[1]} has already been checked`);
     return err;
+  }
+
+  allSunk(): boolean {
+    for (let i = 0; i < this.ships.length; i++) {
+      if (!this.ships[i].isSunk()) {
+        console.log(this.ships[i]);
+        return false;
+      }
+    }
+    return true;
   }
 }
