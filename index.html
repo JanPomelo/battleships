@@ -5,8 +5,13 @@
     <title>Development</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script defer src="bundle.js"></script>
+    <link rel="stylesheet" type="text/css" href="output.css">
   </head>
-  <body>
-    <h1 class="text-3xl font-bold underline">Hello world!</h1>
+  <body class="h-screen bg-yellow-100 flex flex-col items-center justify-between">
+    <main class="flex-grow pt-3 w-full items-center flex-col flex">
+      <h1 class="text-5xl font-bold mb-5">BattleDucks</h1>
+      <div id="gameDiv" class="flex flex-col md:flex-row gap-5"></div>
+    </main>
   </body>
+  <footer class="bg-black flex flex-col w-full text-white items-center py-1">a game made by JanPomelo</footer>
 </html>
