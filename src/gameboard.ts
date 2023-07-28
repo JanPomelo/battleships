@@ -43,9 +43,9 @@ export class Gameboard {
     }
     // if yes, place the boat
     for (let i = 0; i < shipSpaceCols.length; i++) {
-      this.ships.push(ship);
       this.board[shipSpaceRows[i]][shipSpaceCols[i]] = ship;
     }
+    this.ships.push(ship);
   }
   // helper function to check if the tiles where the boat should be placed are available or already occupied by another ship
   private _checkIfSpaceIsFree(row: number[], col: number[]) {
