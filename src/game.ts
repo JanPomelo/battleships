@@ -15,3 +15,15 @@ export function startNewGame(): Game {
     computer: computer,
   };
 }
+
+export function endGame(game: Game) {
+  if (game.player.board.allSunk()) {
+    alert("Computer won, you stupid loser");
+    return true;
+  }
+  if (game.computer.board.allSunk()) {
+    alert("You won.");
+    return true;
+  }
+  return false;
+}

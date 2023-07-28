@@ -1,4 +1,5 @@
 "use strict";
+import { endGame } from "./game";
 import { Gameboard } from "./gameboard";
 import { Ship } from "./ship";
 export class Player {
@@ -25,18 +26,26 @@ export class Player {
     const destroyer: Ship = new Ship(2);
     const shipsToPlace: Ship[] = [carrier, battleship, cruiser, submarine, destroyer];
 
-    this.board.placeShip(carrier, "Horizontal", [0, 0]);
+    /*this.board.placeShip(carrier, "Horizontal", [0, 0]);
     this.board.placeShip(battleship, "Vertical", [9, 9]);
     this.board.placeShip(cruiser, "Horizontal", [2, 0]);
     this.board.placeShip(submarine, "Horizontal", [4, 0]);
     this.board.placeShip(destroyer, "Horizontal", [6, 0]);
-
-    /*for (let i = 0; i < shipsToPlace.length; i++) {
-    let shipPlaced: undefined | Error;
-    do {
-      shipPlaced = player.board.placeShip(shipsToPlace[i],)
+    */
+    for (let i = 0; i < shipsToPlace.length; i++) {
+      let shipPlaced: undefined | Error;
+      do {
+        const horVer = Math.floor(Math.random() * 2);
+        let dir: "Horizontal" | "Vertical" = "Horizontal"
+        if (horVer === 1) {
+          dir = "Vertical";
+        }
+        shipPlaced = this.board.placeShip(shipsToPlace[i], dir, [
+          Math.floor(Math.random() * 10),
+          Math.floor(Math.random() * 10),
+        ]);
+      } while (shipPlaced);
     }
-  }*/
   }
 
   makeMove(coords: number[] | null, player: Player) {
@@ -47,6 +56,7 @@ export class Player {
         let column = Math.floor(Math.random() * 10);
         computerResponse = player.board.receiveAttack([row, column]);
       } while (computerResponse != undefined);
+      
       return true;
     }
     let playerResponse = player.board.receiveAttack(coords);
