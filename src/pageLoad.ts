@@ -2,7 +2,7 @@
 
 import { Player } from "./player";
 import Duck from "./img/duck.jpg";
-import { Game } from "./game";
+import { Game, endGame } from "./game";
 export function createPlayerDiv(id: string, player: Player, game: Game): HTMLDivElement {
   const div: HTMLDivElement = document.createElement("div");
   div.classList.add("flex", "flex-col", "items-center", "w-full", "p-2", "rounded-xl", "border-4", "border-black");
@@ -35,8 +35,15 @@ function createGrid(player: Player, game: Game): HTMLDivElement {
         gridPoint.classList.add("bg-white");
         gridPoint.addEventListener("click", function revealItem() {
           player.board.receiveAttack([i, j]);
+          reloadGrids(game);
+          if (endGame(game)) {
+            return;
+          }
           player.makeMove(null, game.player);
           reloadGrids(game);
+          if (endGame(game)) {
+            return;
+          }
           gridPoint.removeEventListener("click", revealItem);
         });
       }
@@ -58,14 +65,14 @@ function iterateThroughGrids(grid: HTMLDivElement, player: Player) {
   console.log(player.board.allSunk());
   for (let i = 0; i < grid.children.length; i++) {
     //if (grid.children[i].classList.contains("revealed")) {
-      const row = Math.floor(i / 10);
-      const col = i % 10;
-      if (player.board.board[row][col] === "Hit") {
-        grid.children[i].classList.add("bg-red-300");
-      }
-      if (player.board.board[row][col] === "Sea") {
-        grid.children[i].classList.add("bg-blue-300");
-      }
+    const row = Math.floor(i / 10);
+    const col = i % 10;
+    if (player.board.board[row][col] === "Hit") {
+      grid.children[i].classList.add("bg-red-300");
+    }
+    if (player.board.board[row][col] === "Sea") {
+      grid.children[i].classList.add("bg-blue-300");
+    }
     //}
   }
 }
