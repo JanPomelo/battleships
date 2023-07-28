@@ -3,11 +3,16 @@ import { Gameboard } from "./gameboard"
 
 export class Player {
   private gameBoard: Gameboard;
+  private playerName: string;
 
-  constructor() {
+  constructor(name: string) {
     this.gameBoard = new Gameboard();
+    this.playerName = name;
   }
 
+  get name() {
+    return this.playerName;
+  }
   get board() {
     return this.gameBoard;
   }
