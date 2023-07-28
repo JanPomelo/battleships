@@ -1,3 +1,7 @@
 import './style.css';
+import { createPlayerDiv } from './pageLoad';
+const gameDiv = document.querySelector("#gameDiv");
 
-console.log('hello');
+gameDiv.appendChild(createPlayerDiv('player'));
+
+gameDiv.appendChild(createPlayerDiv('computer'));
