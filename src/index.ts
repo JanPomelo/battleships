@@ -1,3 +1,4 @@
-import './style.css';
+import "./style.css";
+import { writeIntroduction } from "./pageLoad";
 
-console.log('hello');
+writeIntroduction();
