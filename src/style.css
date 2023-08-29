@@ -12,11 +12,39 @@ html {
   grid-template-columns: repeat(10, 22px);
   grid-template-rows: repeat(10, 22px);
   width: fit-content;
-  background-color: gray;
+  background-color: #5a5a5a;
   gap: 1px;
-  border: 1px solid gray;
+  border: 7px grey inset;
+  border-radius: 0.5rem;
 }
 
 img {
   mix-blend-mode: multiply;
+}
+
+.bg-red-300 {
+  background-color: rgba(255, 114, 118, 0.7);
+}
+
+.bg-blue-300 {
+  background-color: rgba(173, 216, 230, 0.9);
+}
+
+.backgroundIMG {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -2;
+}
+
+.boatsens {
+  width: 22px;
+  height: 22px;
+}
+
+#boatPanel {
+  border: 7px grey inset;
+  border-radius: 0.5rem;
 }
