@@ -1,4 +1,5 @@
 import "./style.css";
-import { writeIntroduction } from "./pageLoad";
+import { loadBGImg, writeIntroduction } from "./pageLoad";
 
 writeIntroduction();
+loadBGImg();
