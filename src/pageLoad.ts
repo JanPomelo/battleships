@@ -1,5 +1,6 @@
 import Background from "./img/background.jpeg"
-
+import { startNewGame } from "./game";
+import { Player } from "./player";
 const main: HTMLDivElement = document.getElementById("main") as HTMLDivElement;
 
 export function loadBGImg() {
@@ -29,16 +30,29 @@ export function writeIntroduction() {
     'hover:bg-gray-200', 'active:bg-gray-400');
   playButton.addEventListener('click', () => {
     changeIntroText(introParagraph);
-    loadBoards();
+    startGame();
+    playButton.classList.toggle('invisible');
   })
   div.appendChild(playButton);
 
 }
 
-function changeIntroText(paragraph: HTMLParagraphElement) {
+function changeIntroText(paragraph: HTMLParagraphElement):void {
   paragraph.innerText = 'Place your ships on your Board. Choose wisely! Good luck captain!';
 }
 
-function loadBoards() {
+function startGame() {
+  const game = startNewGame();
+  createGameDiv();
+  loadBoard(game.computer);
+  loadBoard(game.player);  
+}
 
+function createGameDiv(): void {
+  const div: HTMLDivElement = document.createElement('div');
+  div.classList.add('h-10', 'w-10', 'bg-black/30', 'rounded-xl', 'mt-2', 'flex', 'flex-col', 'lg:flex-row');
+  main.appendChild(div);
+}
+
+function loadBoard(player: Player):void {
 }
