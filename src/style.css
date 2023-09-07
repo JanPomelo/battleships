@@ -15,6 +15,7 @@ main {
 
 
 
+
 #bgIMG {
   position: absolute;
   top: 0;
@@ -28,4 +29,22 @@ main {
   #bgIMG {
     width: 100%;
   }
+}
+
+@media only screen and (max-width: 287px){
+  #introPar {
+  height: 9rem;
+}
+}
+
+@media only screen and (min-width: 288px) and (max-width: 371px){
+  #introPar {
+  height: 8rem;
+}
+}
+
+@media only screen and (min-width: 372px) and (max-width: 639px) {
+  #introPar {
+  height: 6rem;
+}
 }
