@@ -1,7 +1,7 @@
 "use strict";
 import { Player } from "./player";
 import { Ship } from "./ship";
-type Game = {
+export type Game = {
   player: Player;
   computer: Player;
 };
