@@ -67,7 +67,7 @@ function startGame() {
 
 function createGameDiv(game: Game): void {
   const div: HTMLDivElement = document.createElement("div");
-  div.classList.add("bg-black/30", "rounded-xl", "mt-2", "flex", 'gap-10', "flex-col", "lg:flex-row", 'p-2');
+  div.classList.add("bg-black/30", "rounded-xl", "mt-2", "flex", 'gap-4', "flex-col", "lg:flex-row", 'p-2', 'flex-grow');
   main.appendChild(div);
   const computerBoard: HTMLDivElement = loadPlayerDiv(game.computer, 'Enemy');
   const playerBoard: HTMLDivElement = loadPlayerDiv(game.player, 'You');
@@ -77,10 +77,27 @@ function createGameDiv(game: Game): void {
 
 function loadPlayerDiv(player: Player, name: String): HTMLDivElement {
   const div: HTMLDivElement = document.createElement("div");
-  div.classList.add('p-2','bg-black/30', 'rounded-xl');
+  div.classList.add('p-2','bg-black/30', 'rounded-xl', 'flex-grow');
   const heading: HTMLHeadingElement = document.createElement('h3');
   heading.innerText = name === 'Enemy' ? 'Enemy Board' : 'Your Board';
   heading.classList.add('font-bold');
+  const subDiv: HTMLDivElement = document.createElement('div');
+  subDiv.classList.add('flex', 'gap-3');
   div.appendChild(heading);
+  div.appendChild(subDiv)
+  subDiv.appendChild(loadGameBoard(player));
+  return div;
+}
+
+function loadGameBoard(player: Player): HTMLDivElement {
+  const div: HTMLDivElement = document.createElement("div");
+  div.classList.add('playGround', 'bg-black');
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      const miniDiv: HTMLDivElement = document.createElement('div');
+      miniDiv.classList.add('rounded', 'bg-gray-200', 'miniDiv');
+      div.appendChild(miniDiv);
+    }
+  }
   return div;
 }

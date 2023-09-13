@@ -13,7 +13,18 @@ main {
   font-family: 'Crimson Text';
 }
 
+.playGround {
+  display: grid;
+  grid-template-rows: repeat(10, 4.3vw);
+  grid-template-columns: repeat(10, 4.3vw);
+   border: 3px black solid;
+  border-radius: 0.5rem;
+}
 
+.miniDiv {
+  width: 4.3vw;
+  height: 4.3vw;
+}
 
 
 #bgIMG {
@@ -31,20 +42,38 @@ main {
   }
 }
 
-@media only screen and (max-width: 287px){
-  #introPar {
-  height: 9rem;
+@media only screen and (min-width: 587px) and (max-width: 700px) {
+  .miniDiv {
+    height: 4vw;
+    width: 4vw;
+  }
+  .playGround {
+  display: grid;
+  grid-template-rows: repeat(10, 4vw);
+  grid-template-columns: repeat(10, 4vw);
 }
 }
 
-@media only screen and (min-width: 288px) and (max-width: 371px){
-  #introPar {
-  height: 8rem;
+@media only screen and (min-width: 701px) and (max-width: 900px) {
+  .miniDiv {
+    height: 3vw;
+    width: 3vw;
+  }
+  .playGround {
+  display: grid;
+  grid-template-rows: repeat(10, 3vw);
+  grid-template-columns: repeat(10, 3vw);
 }
 }
 
-@media only screen and (min-width: 372px) and (max-width: 639px) {
-  #introPar {
-  height: 6rem;
+@media only screen and (min-width: 901px) {
+  .miniDiv {
+    height: 3vh;
+    width: 3vh;
+  }
+  .playGround {
+  display: grid;
+  grid-template-rows: repeat(10, 3vh);
+  grid-template-columns: repeat(10, 3vh);
 }
 }
