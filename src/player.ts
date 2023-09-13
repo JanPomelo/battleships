@@ -1,11 +1,13 @@
 'use strict'
 import { Gameboard } from "./gameboard"
+import { printGameBoard } from "./pageLoad";
 
 export class Player {
   private gameBoard: Gameboard;
-
-  constructor() {
+  name: string
+  constructor(name: string) {
     this.gameBoard = new Gameboard();
+    this.name = name;
   }
 
   get board() {

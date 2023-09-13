@@ -7,8 +7,8 @@ export type Game = {
 };
 
 export function startNewGame(): Game {
-  const player = new Player();
-  const computer = new Player();
+  const player = new Player('Player');
+  const computer = new Player('Enemy');
   placeAllShips(player);
   placeAllShips(computer);
   return {
