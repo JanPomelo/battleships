@@ -43,7 +43,6 @@ function placeAllShips(player: Player) {
       } while (shipPlaced);
     }
   }
-  console.log(player.board);
 }
 
 export function checkEnd(game: Game): string {

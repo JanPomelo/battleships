@@ -98,6 +98,7 @@ function loadPlayerDiv(player: Player, name: String): HTMLDivElement {
   div.appendChild(heading);
   div.appendChild(subDiv);
   subDiv.appendChild(loadGameBoard(player));
+  createShipsDiv(subDiv, player);
   return div;
 }
 
@@ -117,6 +118,8 @@ function loadGameBoard(player: Player): HTMLDivElement {
             player.makeMove(null, game.player);
             printGameBoard(game.computer, div);
             printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+            checkSunkStatus(game.computer);
+            checkSunkStatus(game.player);
             createEndScreen();
           }
         });
@@ -142,6 +145,76 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
       } else if (player.name === "Player" && player.board.board[i][j] instanceof Ship) {
         div.children[Number(i.toString() + j.toString())].classList.add("bg-green-400");
         div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200");
+      }
+    }
+  }
+}
+
+function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
+  const div: HTMLDivElement = document.createElement("div");
+  div.classList.add("flex", "flex-col", "gap-3");
+  bigDiv.appendChild(div);
+  const carrier: HTMLDivElement = document.createElement("div");
+  carrier.classList.add("flex", "boat", "bg-black");
+  for (let i = 0; i < 5; i++) {
+    const miniDiv: HTMLDivElement = document.createElement("div");
+    miniDiv.classList.add("miniDiv", "bg-green-400");
+    carrier.appendChild(miniDiv);
+  }
+  carrier.id = `${player.name}-carrier`;
+  div.appendChild(carrier);
+  const battleship: HTMLDivElement = document.createElement("div");
+  battleship.classList.add("flex", "boat", "bg-black");
+  for (let i = 0; i < 4; i++) {
+    const miniDiv: HTMLDivElement = document.createElement("div");
+    miniDiv.classList.add("miniDiv", "bg-green-400");
+    battleship.appendChild(miniDiv);
+  }
+  battleship.id = `${player.name}-battleship`;
+  div.appendChild(battleship);
+  const cruiser: HTMLDivElement = document.createElement("div");
+  cruiser.classList.add("flex", "boat", "bg-black");
+  for (let i = 0; i < 3; i++) {
+    const miniDiv: HTMLDivElement = document.createElement("div");
+    miniDiv.classList.add("miniDiv", "bg-green-400");
+    cruiser.appendChild(miniDiv);
+  }
+  cruiser.id = `${player.name}-cruiser`;
+  div.appendChild(cruiser);
+  const submarine: HTMLDivElement = document.createElement("div");
+  submarine.classList.add("flex", "boat", "bg-black");
+  for (let i = 0; i < 3; i++) {
+    const miniDiv: HTMLDivElement = document.createElement("div");
+    miniDiv.classList.add("miniDiv", "bg-green-400");
+    submarine.appendChild(miniDiv);
+  }
+  submarine.id = `${player.name}-submarine`;
+  div.appendChild(submarine);
+  const destroyer: HTMLDivElement = document.createElement("div");
+  destroyer.classList.add("flex", "boat", "bg-black");
+  for (let i = 0; i < 2; i++) {
+    const miniDiv: HTMLDivElement = document.createElement("div");
+    miniDiv.classList.add("miniDiv", "bg-green-400");
+    destroyer.appendChild(miniDiv);
+  }
+  destroyer.id = `${player.name}-destroyer`;
+  div.appendChild(destroyer);
+}
+
+function checkSunkStatus(player: Player) {
+  const boats: HTMLDivElement[] = [];
+  boats.push(document.getElementById(`${player.name}-carrier`) as HTMLDivElement);
+  boats.push(document.getElementById(`${player.name}-battleship`) as HTMLDivElement);
+  boats.push(document.getElementById(`${player.name}-cruiser`) as HTMLDivElement);
+  boats.push(document.getElementById(`${player.name}-submarine`) as HTMLDivElement);
+  boats.push(document.getElementById(`${player.name}-destroyer`) as HTMLDivElement);
+
+  for (let i = 0; i < player.board.ships.length; i++) {
+    if (player.board.ships[i].isSunk()) {
+      //console.log(boats[i].children[0].classList);
+      for (let j = 0; j < boats[i].children.length; j++) {
+        boats[i].children[j].classList.remove("bg-green-400");
+        boats[i].children[j].classList.add("bg-red-400");
       }
     }
   }
@@ -182,11 +255,7 @@ export function createEndScreen() {
     newGameBut.classList.add("border", "rounded-lg", "border-black", "text-lg", "bg-black");
     div.appendChild(newGameBut);
     newGameBut.addEventListener("click", () => {
-      console.log("vorher:");
-      console.log(div);
       div.remove();
-      console.log("nachher:");
-      console.log(div);
       const gameDiv: HTMLDivElement = document.getElementById("gameDiv") as HTMLDivElement;
       game = startNewGame();
       gameDiv.remove();

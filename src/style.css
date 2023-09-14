@@ -21,6 +21,11 @@ main {
   border-radius: 0.5rem;
   gap: 1px
 }
+.boat {
+  padding: 2px;
+  gap: 2px;
+  margin-right: auto;
+}
 
 .miniDiv {
   width: 4.3vw;

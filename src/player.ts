@@ -21,11 +21,7 @@ export class Player {
         let row = Math.floor(Math.random() * 10);
         let column = Math.floor(Math.random() * 10);
         computerResponse = player.board.receiveAttack([row, column]);
-        console.log({
-          row: row,
-          column: column,
-          computerResponse: computerResponse
-        })
+    
       }
       while (computerResponse != undefined)
       return true;
