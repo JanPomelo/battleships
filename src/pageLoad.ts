@@ -1,10 +1,10 @@
 import Background from "./img/background.jpeg";
 import { startNewGame } from "./game";
 import { Player } from "./player";
-import { Game } from "./game";
+import { Game, checkEnd } from "./game";
 import { Ship } from "./ship";
 const main: HTMLDivElement = document.getElementById("main") as HTMLDivElement;
-const game = startNewGame();
+let game = startNewGame();
 
 export function loadBGImg() {
   const img: HTMLImageElement = document.createElement("img");
@@ -79,6 +79,7 @@ function createGameDiv(game: Game): void {
     "p-2",
     "flex-grow"
   );
+  div.id = "gameDiv";
   main.appendChild(div);
   const computerBoard: HTMLDivElement = loadPlayerDiv(game.computer, "Enemy");
   const playerBoard: HTMLDivElement = loadPlayerDiv(game.player, "You");
@@ -116,6 +117,7 @@ function loadGameBoard(player: Player): HTMLDivElement {
             player.makeMove(null, game.player);
             printGameBoard(game.computer, div);
             printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+            createEndScreen();
           }
         });
       }
@@ -132,13 +134,63 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
       if (player.board.board[i][j] === "Hit") {
-        div.children[Number(i.toString() + j.toString())].classList.remove("bg-green-400");
+        div.children[Number(i.toString() + j.toString())].classList.remove("bg-green-400", "bg-gray-200");
         div.children[Number(i.toString() + j.toString())].classList.add("bg-red-300");
       } else if (player.board.board[i][j] === "Sea") {
         div.children[Number(i.toString() + j.toString())].classList.add("bg-blue-400");
+        div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200");
       } else if (player.name === "Player" && player.board.board[i][j] instanceof Ship) {
         div.children[Number(i.toString() + j.toString())].classList.add("bg-green-400");
+        div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200");
       }
     }
+  }
+}
+
+export function createEndScreen() {
+  const endCheck: string = checkEnd(game);
+  if (endCheck === "not yet") {
+    return;
+  } else {
+    const div: HTMLDivElement = document.createElement("div");
+    div.classList.add(
+      "absolute",
+      "endGameScreen",
+      "bg-white",
+      "border-2",
+      "rounded-lg",
+      "border-black",
+      "p-2",
+      "flex",
+      "flex-col",
+      "justify-between"
+    );
+    main.appendChild(div);
+    const playerBoard: HTMLDivElement = document.getElementById("Player") as HTMLDivElement;
+    const computerBoard: HTMLDivElement = document.getElementById("Enemy") as HTMLDivElement;
+    playerBoard.style.pointerEvents = "none";
+    computerBoard.style.pointerEvents = "none";
+    const p: HTMLParagraphElement = document.createElement("p");
+    p.innerHTML =
+      endCheck === "win"
+        ? "Unbelievable, captain! You won the game!"
+        : "What a shame. You lost the game! Lousy captain.";
+    p.classList.add("font-bold", "text-lg", "text-black");
+    div.appendChild(p);
+    const newGameBut: HTMLButtonElement = document.createElement("button");
+    newGameBut.innerText = "New Game";
+    newGameBut.classList.add("border", "rounded-lg", "border-black", "text-lg", "bg-black");
+    div.appendChild(newGameBut);
+    newGameBut.addEventListener("click", () => {
+      console.log("vorher:");
+      console.log(div);
+      div.remove();
+      console.log("nachher:");
+      console.log(div);
+      const gameDiv: HTMLDivElement = document.getElementById("gameDiv") as HTMLDivElement;
+      game = startNewGame();
+      gameDiv.remove();
+      startGame();
+    });
   }
 }

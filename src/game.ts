@@ -38,3 +38,13 @@ function placeAllShips(player: Player) {
     }
   }*/
 }
+
+export function checkEnd(game: Game): string {
+  if (game.player.board.allSunk()) {
+    return 'lose';
+  }
+  if (game.computer.board.allSunk()) {
+    return 'win';
+  }
+  return 'not yet';
+}

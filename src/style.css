@@ -27,6 +27,18 @@ main {
   height: 4.3vw;
 }
 
+.endGameScreen {
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  top: 0;
+  bottom: 0;
+  margin: auto; 
+  width: 200px; /* Need a specific value to work */
+  height: 140px;
+  z-index: 99;
+}
+
 
 #bgIMG {
   position: absolute;

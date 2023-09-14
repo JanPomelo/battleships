@@ -113,7 +113,7 @@ export class Gameboard {
   allSunk(): boolean {
     for (let i = 0; i < this.ships.length; i++) {
       if (!this.ships[i].isSunk()) {
-        console.log(this.ships[i]);
+        
         return false;
       }
     }
