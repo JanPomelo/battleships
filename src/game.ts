@@ -7,8 +7,8 @@ export type Game = {
 };
 
 export function startNewGame(): Game {
-  const player = new Player('Player');
-  const computer = new Player('Enemy');
+  const player = new Player("Player");
+  const computer = new Player("Enemy");
   placeAllShips(player);
   placeAllShips(computer);
   return {
@@ -25,26 +25,33 @@ function placeAllShips(player: Player) {
   const destroyer: Ship = new Ship(2);
   const shipsToPlace: Ship[] = [carrier, battleship, cruiser, submarine, destroyer];
 
-  player.board.placeShip(carrier, "Horizontal", [0, 0]);
-  player.board.placeShip(battleship, "Vertical", [9, 9]);
-  player.board.placeShip(cruiser, "Horizontal", [2, 0]);
-  player.board.placeShip(submarine, "Horizontal", [4, 0]);
-  player.board.placeShip(destroyer, "Horizontal", [6, 0]);
-
-  /*for (let i = 0; i < shipsToPlace.length; i++) {
-    let shipPlaced: undefined | Error;
-    do {
-      shipPlaced = player.board.placeShip(shipsToPlace[i],)
+  if (player.name === "Player") {
+    player.board.placeShip(carrier, "Horizontal", [0, 0]);
+    player.board.placeShip(battleship, "Vertical", [9, 9]);
+    player.board.placeShip(cruiser, "Horizontal", [2, 0]);
+    player.board.placeShip(submarine, "Horizontal", [4, 0]);
+    player.board.placeShip(destroyer, "Horizontal", [6, 0]);
+  } else {
+    for (let i = 0; i < shipsToPlace.length; i++) {
+      let shipPlaced: undefined | Error;
+      do {
+        const row: number = Math.floor(Math.random() * 10);
+        const column: number = Math.floor(Math.random() * 10);
+        const horVer: number = Math.floor(Math.random() * 2);
+        const horVerString: "Vertical" | "Horizontal" = horVer === 1 ? "Vertical" : "Horizontal";
+        shipPlaced = player.board.placeShip(shipsToPlace[i], horVerString, [row, column]);
+      } while (shipPlaced);
     }
-  }*/
+  }
+  console.log(player.board);
 }
 
 export function checkEnd(game: Game): string {
   if (game.player.board.allSunk()) {
-    return 'lose';
+    return "lose";
   }
   if (game.computer.board.allSunk()) {
-    return 'win';
+    return "win";
   }
-  return 'not yet';
+  return "not yet";
 }
