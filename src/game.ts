@@ -9,7 +9,7 @@ export type Game = {
 export function startNewGame(): Game {
   const player = new Player("Player");
   const computer = new Player("Enemy");
-  placeAllShips(player);
+  //placeAllShips(player);
   placeAllShips(computer);
   return {
     player: player,
@@ -31,6 +31,7 @@ function placeAllShips(player: Player) {
     player.board.placeShip(cruiser, "Horizontal", [2, 0]);
     player.board.placeShip(submarine, "Horizontal", [4, 0]);
     player.board.placeShip(destroyer, "Horizontal", [6, 0]);
+    
   } else {
     for (let i = 0; i < shipsToPlace.length; i++) {
       let shipPlaced: undefined | Error;

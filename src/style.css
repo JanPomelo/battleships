@@ -32,6 +32,10 @@ main {
   height: 4.3vw;
 }
 
+.over {
+  opacity: 0.6;
+}
+
 .endGameScreen {
   position: absolute; 
   left: 0; 

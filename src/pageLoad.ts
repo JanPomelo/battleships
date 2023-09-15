@@ -5,6 +5,7 @@ import { Game, checkEnd } from "./game";
 import { Ship } from "./ship";
 const main: HTMLDivElement = document.getElementById("main") as HTMLDivElement;
 let game = startNewGame();
+let horVer: "Horizontal" | "Vertical" = "Horizontal";
 
 export function loadBGImg() {
   const img: HTMLImageElement = document.createElement("img");
@@ -85,20 +86,28 @@ function createGameDiv(game: Game): void {
   const playerBoard: HTMLDivElement = loadPlayerDiv(game.player, "You");
   div.appendChild(computerBoard);
   div.appendChild(playerBoard);
+  makeShipsPlaceable(game.player);
 }
 
 function loadPlayerDiv(player: Player, name: String): HTMLDivElement {
   const div: HTMLDivElement = document.createElement("div");
   div.classList.add("p-2", "bg-black/30", "rounded-xl", "flex-grow");
+  const headingdiv: HTMLDivElement = document.createElement("div");
+  headingdiv.classList.add("flex", "justify-between");
   const heading: HTMLHeadingElement = document.createElement("h3");
   heading.innerText = name === "Enemy" ? "Enemy Board" : "Your Board";
   heading.classList.add("font-bold");
   const subDiv: HTMLDivElement = document.createElement("div");
   subDiv.classList.add("flex", "gap-3");
-  div.appendChild(heading);
+  subDiv.id = `${player.name}-subDiv`;
+  div.appendChild(headingdiv);
+  headingdiv.appendChild(heading);
   div.appendChild(subDiv);
   subDiv.appendChild(loadGameBoard(player));
-  createShipsDiv(subDiv, player);
+  if (player.name === "Player") {
+    createShipsDiv(subDiv, player);
+    createHorVerButton(headingdiv);
+  }
   return div;
 }
 
@@ -111,18 +120,12 @@ function loadGameBoard(player: Player): HTMLDivElement {
       const miniDiv: HTMLDivElement = document.createElement("div");
       miniDiv.classList.add("rounded", "bg-gray-200", "miniDiv");
       div.appendChild(miniDiv);
+      miniDiv.id = `${i}-${j}`;
       if (player.name === "Player") {
-      } else {
-        miniDiv.addEventListener("click", () => {
-          if (!player.board.receiveAttack([i, j])) {
-            player.makeMove(null, game.player);
-            printGameBoard(game.computer, div);
-            printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
-            checkSunkStatus(game.computer);
-            checkSunkStatus(game.player);
-            createEndScreen();
-          }
-        });
+        miniDiv.addEventListener("dragover", handleDragOver);
+        miniDiv.addEventListener("dragenter", handleDragEnter);
+        miniDiv.addEventListener("dragleave", handleDragLeave);
+        miniDiv.addEventListener("drop", handleDrop);
       }
     }
   }
@@ -130,6 +133,23 @@ function loadGameBoard(player: Player): HTMLDivElement {
     printGameBoard(player, div);
   }
   return div;
+}
+
+function addOnClickToEnemeyBoard(bigDiv: HTMLDivElement) {
+  for (let i = 0; i < bigDiv.children.length; i++) {
+    bigDiv.children[i].addEventListener("click", () => {
+      const row: number = Number(bigDiv.children[i].id.substring(0, 1));
+      const col: number = Number(bigDiv.children[i].id.substring(2));
+      if (!game.computer.board.receiveAttack([row,col])) {
+        game.computer.makeMove(null, game.player);
+        printGameBoard(game.computer, bigDiv);
+        printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+        checkSunkStatus(game.computer);
+        checkSunkStatus(game.player);
+        createEndScreen();
+      }
+    });
+  }
 }
 
 export function printGameBoard(player: Player, div: HTMLDivElement) {
@@ -150,8 +170,75 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
   }
 }
 
+function handleDragStart(e: DragEvent) {
+  this.style.opacity = "0.6";
+  let length: number;
+  switch (this.children.length) {
+    case 5:
+      length = 5;
+      break;
+    case 4:
+      length = 4;
+      break;
+    case 2:
+      length = 2;
+      break;
+    default:
+      length = 3;
+      break;
+  }
+  e.dataTransfer.setData("text/plain", length.toString());
+  e.dataTransfer.setData("texto", this.id);
+}
+
+function handleDragEnd() {
+  this.style.opacity = 1;
+}
+
+function handleDragOver(e: DragEvent) {
+  e.preventDefault();
+  return false;
+}
+
+function handleDragEnter(e: DragEvent) {
+  this.classList.add("over");
+}
+
+function handleDragLeave() {
+  this.classList.remove("over");
+}
+
+function handleDrop(e: DragEvent) {
+  this.style.opacity = 1;
+  e.stopPropagation(); // stops the browser from redirecting.
+  let length: string = e.dataTransfer.getData("text/plain");
+  const ship: Ship = new Ship(Number(length));
+  const row: number = Number(this.id.substring(0, 1));
+  const column: number = Number(this.id.substring(2));
+  if (game.player.board.placeShip(ship, horVer, [row, column]) === undefined) {
+    printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+    const draggedShip: HTMLDivElement = document.getElementById(e.dataTransfer.getData("texto")) as HTMLDivElement;
+    draggedShip.removeEventListener("dragend", handleDragEnd);
+    draggedShip.classList.add("opacity-60");
+    draggedShip.draggable = false;
+    checkShips();
+  }
+  return false;
+}
+
+function checkShips() {
+  if (game.player.board.ships.length > 4) {
+    const gameBoardDiv: HTMLDivElement = document.getElementById('Enemy') as HTMLDivElement;
+    addOnClickToEnemeyBoard(gameBoardDiv)
+    const div: HTMLDivElement = document.getElementById("Enemy-subDiv") as HTMLDivElement;
+    createShipsDiv(div, game.computer);
+    
+  }
+}
+
 function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
   const div: HTMLDivElement = document.createElement("div");
+  div.id = "shipsDiv";
   div.classList.add("flex", "flex-col", "gap-3");
   bigDiv.appendChild(div);
   const carrier: HTMLDivElement = document.createElement("div");
@@ -199,6 +286,73 @@ function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
   }
   destroyer.id = `${player.name}-destroyer`;
   div.appendChild(destroyer);
+}
+
+function createHorVerButton(bigDiv: HTMLDivElement) {
+  const div: HTMLDivElement = document.createElement("div");
+  const horizontalBut: HTMLButtonElement = document.createElement("button");
+  horizontalBut.id = "hori";
+  horizontalBut.innerText = "Horizontal";
+  const verticalBut: HTMLButtonElement = document.createElement("button");
+  verticalBut.id = "verti";
+  verticalBut.innerText = "Vertical";
+  div.appendChild(horizontalBut);
+  div.appendChild(verticalBut);
+  div.classList.add("flex");
+  horizontalBut.classList.add("border", "border-black", "px-1", "bg-gray-400", "text-black", "rounded-l", "mb-1");
+  verticalBut.classList.add("border", "border-black", "px-1", "bg-white", "text-black", "rounded-r", "mb-1");
+  bigDiv.appendChild(div);
+
+  function makeThingsHorizontal() {
+    horizontalBut.classList.toggle("bg-gray-400");
+    horizontalBut.classList.toggle("bg-white");
+    verticalBut.classList.toggle("bg-gray-400");
+    verticalBut.classList.toggle("bg-white");
+    horizontalBut.removeEventListener("click", makeThingsHorizontal);
+    verticalBut.addEventListener("click", makeThingsVertical);
+    horVer = "Horizontal";
+    const shipsDiv = document.getElementById("shipsDiv");
+    shipsDiv.classList.toggle("flex-col");
+    for (let i = 0; i < shipsDiv.children.length; i++) {
+      shipsDiv.children[i].classList.toggle("flex-col");
+      shipsDiv.children[i].classList.toggle("mb-auto");
+    }
+  }
+
+  function makeThingsVertical() {
+    horizontalBut.classList.toggle("bg-gray-400");
+    horizontalBut.classList.toggle("bg-white");
+    verticalBut.classList.toggle("bg-gray-400");
+    verticalBut.classList.toggle("bg-white");
+    verticalBut.removeEventListener("click", makeThingsVertical);
+    horizontalBut.addEventListener("click", makeThingsHorizontal);
+    const shipsDiv = document.getElementById("shipsDiv");
+    shipsDiv.classList.toggle("flex-col");
+    horVer = "Vertical";
+    for (let i = 0; i < shipsDiv.children.length; i++) {
+      shipsDiv.children[i].classList.toggle("flex-col");
+      shipsDiv.children[i].classList.toggle("mb-auto");
+    }
+  }
+
+  verticalBut.addEventListener("click", makeThingsVertical);
+  horizontalBut.addEventListener("click", makeThingsHorizontal);
+}
+
+function makeShipsPlaceable(player: Player) {
+  const boats: HTMLDivElement[] = [];
+  boats.push(document.getElementById(`${player.name}-carrier`) as HTMLDivElement);
+  console.log(document.getElementById(`${player.name}-carrier`));
+  boats.push(document.getElementById(`${player.name}-battleship`) as HTMLDivElement);
+  boats.push(document.getElementById(`${player.name}-cruiser`) as HTMLDivElement);
+  boats.push(document.getElementById(`${player.name}-submarine`) as HTMLDivElement);
+  boats.push(document.getElementById(`${player.name}-destroyer`) as HTMLDivElement);
+  for (let i = 0; i < boats.length; i++) {
+    boats[i].draggable = true;
+    boats[i].classList.add("cursor-move");
+    boats[i].addEventListener("dragstart", handleDragStart);
+    boats[i].addEventListener("dragend", handleDragEnd);
+  }
 }
 
 function checkSunkStatus(player: Player) {
