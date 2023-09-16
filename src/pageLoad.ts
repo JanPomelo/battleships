@@ -94,6 +94,7 @@ function loadPlayerDiv(player: Player, name: String): HTMLDivElement {
   div.classList.add("p-2", "bg-black/30", "rounded-xl", "flex-grow");
   const headingdiv: HTMLDivElement = document.createElement("div");
   headingdiv.classList.add("flex", "justify-between");
+  headingdiv.id = "playerHeadingDiv";
   const heading: HTMLHeadingElement = document.createElement("h3");
   heading.innerText = name === "Enemy" ? "Enemy Board" : "Your Board";
   heading.classList.add("font-bold");
@@ -140,7 +141,7 @@ function addOnClickToEnemeyBoard(bigDiv: HTMLDivElement) {
     bigDiv.children[i].addEventListener("click", () => {
       const row: number = Number(bigDiv.children[i].id.substring(0, 1));
       const col: number = Number(bigDiv.children[i].id.substring(2));
-      if (!game.computer.board.receiveAttack([row,col])) {
+      if (!game.computer.board.receiveAttack([row, col])) {
         game.computer.makeMove(null, game.player);
         printGameBoard(game.computer, bigDiv);
         printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
@@ -171,7 +172,7 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
 }
 
 function handleDragStart(e: DragEvent) {
-  this.style.opacity = "0.6";
+  this.classList.add("opacity-60");
   let length: number;
   switch (this.children.length) {
     case 5:
@@ -192,7 +193,7 @@ function handleDragStart(e: DragEvent) {
 }
 
 function handleDragEnd() {
-  this.style.opacity = 1;
+  this.classList.remove("opacity-60");
 }
 
 function handleDragOver(e: DragEvent) {
@@ -228,11 +229,20 @@ function handleDrop(e: DragEvent) {
 
 function checkShips() {
   if (game.player.board.ships.length > 4) {
-    const gameBoardDiv: HTMLDivElement = document.getElementById('Enemy') as HTMLDivElement;
-    addOnClickToEnemeyBoard(gameBoardDiv)
+    const shipsDiv = document.getElementById("shipsDiv");
+    shipsDiv.classList.remove("mb-auto");
+    shipsDiv.classList.add("flex-col");
+    for (let i = 0; i < shipsDiv.children.length; i++) {
+      shipsDiv.children[i].classList.remove("flex-col");
+      shipsDiv.children[i].classList.remove("mb-auto");
+      shipsDiv.children[i].classList.remove("opacity-60");
+    }
+    const gameBoardDiv: HTMLDivElement = document.getElementById("Enemy") as HTMLDivElement;
+    addOnClickToEnemeyBoard(gameBoardDiv);
     const div: HTMLDivElement = document.getElementById("Enemy-subDiv") as HTMLDivElement;
     createShipsDiv(div, game.computer);
-    
+    const buttonDiv: HTMLDivElement = document.getElementById("buttonDiv") as HTMLDivElement;
+    buttonDiv.remove();
   }
 }
 
@@ -290,6 +300,7 @@ function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
 
 function createHorVerButton(bigDiv: HTMLDivElement) {
   const div: HTMLDivElement = document.createElement("div");
+  div.id = "buttonDiv";
   const horizontalBut: HTMLButtonElement = document.createElement("button");
   horizontalBut.id = "hori";
   horizontalBut.innerText = "Horizontal";
@@ -363,8 +374,10 @@ function checkSunkStatus(player: Player) {
   boats.push(document.getElementById(`${player.name}-submarine`) as HTMLDivElement);
   boats.push(document.getElementById(`${player.name}-destroyer`) as HTMLDivElement);
 
-  for (let i = 0; i < player.board.ships.length; i++) {
-    if (player.board.ships[i].isSunk()) {
+  const playerBoardShipsSorted = player.board.ships.sort(compare);
+  console.log(playerBoardShipsSorted);
+  for (let i = 0; i < playerBoardShipsSorted.length; i++) {
+    if (playerBoardShipsSorted[i].isSunk()) {
       //console.log(boats[i].children[0].classList);
       for (let j = 0; j < boats[i].children.length; j++) {
         boats[i].children[j].classList.remove("bg-green-400");
@@ -372,6 +385,16 @@ function checkSunkStatus(player: Player) {
       }
     }
   }
+}
+
+function compare(a: Ship, b: Ship) {
+  if (a.length < b.length) {
+    return 1;
+  }
+  if (a.length > b.length) {
+    return -1;
+  }
+  return 0;
 }
 
 export function createEndScreen() {
