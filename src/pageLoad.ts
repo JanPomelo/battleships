@@ -188,7 +188,9 @@ function loadGameBoard(player: Player): HTMLDivElement {
   return div;
 }
 
+// function to add an OnClick event to the divs on the enemy board
 function addOnClickToEnemeyBoard(bigDiv: HTMLDivElement) {
+  // for each div
   for (let i = 0; i < bigDiv.children.length; i++) {
     bigDiv.children[i].addEventListener("click", () => {
       const row: number = Number(bigDiv.children[i].id.substring(0, 1));
@@ -209,14 +211,29 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
   //
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
-      if (player.board.board[i][j] === "Hit") {
-        div.children[Number(i.toString() + j.toString())].classList.remove("bg-green-400", "bg-gray-200");
-        div.children[Number(i.toString() + j.toString())].classList.add("bg-red-300");
+      if (player.name === "Player" && player.board.board[i][j] instanceof Ship) {
+        div.children[Number(i.toString() + j.toString())].classList.add("bg-green-400");
+        div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200");
+      }
+      if (player.board.board[i][j] instanceof Ship) {
+        const shipi: Ship = player.board.board[i][j] as Ship;
+        if (shipi.isSunk()) {
+          div.children[Number(i.toString() + j.toString())].classList.remove(
+            "bg-green-400",
+            "bg-gray-200",
+            "bg-red-300"
+          );
+          div.children[Number(i.toString() + j.toString())].classList.add("bg-gray-700");
+        } else {
+          for (let k = 0; k < shipi.hitCoords.length; k++) {
+            if (i === shipi.hitCoords[k][0] && j === shipi.hitCoords[k][1]) {
+              div.children[Number(i.toString() + j.toString())].classList.remove("bg-green-400", "bg-gray-200");
+              div.children[Number(i.toString() + j.toString())].classList.add("bg-red-300");
+            }
+          }
+        }
       } else if (player.board.board[i][j] === "Sea") {
         div.children[Number(i.toString() + j.toString())].classList.add("bg-blue-400");
-        div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200");
-      } else if (player.name === "Player" && player.board.board[i][j] instanceof Ship) {
-        div.children[Number(i.toString() + j.toString())].classList.add("bg-green-400");
         div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200");
       }
     }
@@ -437,7 +454,7 @@ function checkSunkStatus(player: Player) {
       //console.log(boats[i].children[0].classList);
       for (let j = 0; j < boats[i].children.length; j++) {
         boats[i].children[j].classList.remove("bg-green-400");
-        boats[i].children[j].classList.add("bg-red-400");
+        boats[i].children[j].classList.add("bg-gray-700");
       }
     }
   }

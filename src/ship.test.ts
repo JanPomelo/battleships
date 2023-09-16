@@ -12,9 +12,9 @@ describe("Ship Class Test", () => {
   });
   
   test('ship sinks after hits', () => {
-    ship.hit()
-    ship.hit()
-    ship.hit()
+    ship.hit(0,0)
+    ship.hit(1,1)
+    ship.hit(1,2)
     expect(ship.isSunk()).toBe(true);
   })
 
