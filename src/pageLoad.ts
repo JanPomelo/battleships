@@ -250,7 +250,7 @@ function checkShips() {
 function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
   const div: HTMLDivElement = document.createElement("div");
   div.id = "shipsDiv";
-  div.classList.add("flex", "flex-col", "gap-3");
+  div.classList.add("flex", "flex-col", "gap-1", 'sm:gap-3', 'flex-wrap', 'sm:flex-nowrap');
   bigDiv.appendChild(div);
   const carrier: HTMLDivElement = document.createElement("div");
   carrier.classList.add("flex", "boat", "bg-black");
