@@ -3,11 +3,13 @@ import { startNewGame } from "./game";
 import { Player } from "./player";
 import { Game, checkEnd } from "./game";
 import { Ship } from "./ship";
-import 'drag-drop-touch';
+import "drag-drop-touch";
+
 const main: HTMLDivElement = document.getElementById("main") as HTMLDivElement;
 let game = startNewGame();
 let horVer: "Horizontal" | "Vertical" = "Horizontal";
 
+// Function to load the background image
 export function loadBGImg() {
   const img: HTMLImageElement = document.createElement("img");
   img.src = Background;
@@ -16,9 +18,9 @@ export function loadBGImg() {
 }
 // Function to write the Introduction test
 export function writeIntroduction() {
-  // TODO: font color change to css
+  // create element
   const div: HTMLDivElement = document.createElement("div");
-  main.appendChild(div);
+  // style element
   div.classList.add(
     "bg-black/30",
     "text-white",
@@ -32,14 +34,28 @@ export function writeIntroduction() {
     "xl:justify-between",
     "xl:gap-10"
   );
+  // -- create child elements //
+  // First //
+  // create element
   const introParagraph: HTMLParagraphElement = document.createElement("p");
+  // give it characteristics
   introParagraph.innerText =
     "Are you ready for an epic battleship fight? Destroy all of the enemy ships before your enemy destroys yours to win. Sounds easy? Well, try it out captain and press the play button!";
-  introParagraph.classList.add("font-bold", "h-fit-content", "sm:h-16", "xl:h-6");
   introParagraph.id = "introPar";
-  div.appendChild(introParagraph);
+  // style element
+  introParagraph.classList.add("font-bold", "h-fit-content", "sm:h-16", "xl:h-6");
+  // Second //
+  // create element
   const playButton: HTMLButtonElement = document.createElement("button");
+  // give it characteristics
+  playButton.addEventListener("click", () => {
+    // when the Play Button is pressed, change the intro text and start the game. Also remove the button from the DOM
+    changeIntroText(introParagraph);
+    createGameDiv(game);
+    playButton.remove();
+  });
   playButton.innerText = "Play";
+  // style element
   playButton.classList.add(
     "rounded-lg",
     "text-black",
@@ -52,20 +68,16 @@ export function writeIntroduction() {
     "hover:bg-gray-200",
     "active:bg-gray-400"
   );
-  playButton.addEventListener("click", () => {
-    changeIntroText(introParagraph);
-    startGame();
-    playButton.classList.toggle("invisible");
-  });
+  // append child elements to the element
+  div.appendChild(introParagraph);
   div.appendChild(playButton);
+  // append element to the DOM
+  main.appendChild(div);
 }
 
+// function to change the intro Text after the play button is pressed
 function changeIntroText(paragraph: HTMLParagraphElement): void {
   paragraph.innerText = "Place your ships on your Board. Choose wisely! Good luck captain!";
-}
-
-function startGame() {
-  createGameDiv(game);
 }
 
 function createGameDiv(game: Game): void {
@@ -244,13 +256,15 @@ function checkShips() {
     createShipsDiv(div, game.computer);
     const buttonDiv: HTMLDivElement = document.getElementById("buttonDiv") as HTMLDivElement;
     buttonDiv.remove();
+    const introParagraph: HTMLParagraphElement = document.getElementById("introPar") as HTMLParagraphElement;
+    introParagraph.innerText = `Okay, let's go Captain! Lets crush our enemy!`;
   }
 }
 
 function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
   const div: HTMLDivElement = document.createElement("div");
   div.id = "shipsDiv";
-  div.classList.add("flex", "flex-col", "gap-1", 'sm:gap-3', 'flex-wrap', 'sm:flex-nowrap');
+  div.classList.add("flex", "flex-col", "gap-1", "sm:gap-3", "flex-wrap", "sm:flex-nowrap");
   bigDiv.appendChild(div);
   const carrier: HTMLDivElement = document.createElement("div");
   carrier.classList.add("flex", "boat", "bg-black");
@@ -302,7 +316,7 @@ function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
 function createHorVerButton(bigDiv: HTMLDivElement) {
   const div: HTMLDivElement = document.createElement("div");
   div.id = "buttonDiv";
-  horVer = 'Horizontal';
+  horVer = "Horizontal";
   const horizontalBut: HTMLButtonElement = document.createElement("button");
   horizontalBut.id = "hori";
   horizontalBut.innerText = "Horizontal";
@@ -438,7 +452,9 @@ export function createEndScreen() {
       const gameDiv: HTMLDivElement = document.getElementById("gameDiv") as HTMLDivElement;
       game = startNewGame();
       gameDiv.remove();
-      startGame();
+      createGameDiv(game);
+      const introPar: HTMLParagraphElement = document.getElementById("introPar") as HTMLParagraphElement;
+      changeIntroText(introPar);
     });
   }
 }
