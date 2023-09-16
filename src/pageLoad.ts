@@ -3,6 +3,7 @@ import { startNewGame } from "./game";
 import { Player } from "./player";
 import { Game, checkEnd } from "./game";
 import { Ship } from "./ship";
+import 'drag-drop-touch';
 const main: HTMLDivElement = document.getElementById("main") as HTMLDivElement;
 let game = startNewGame();
 let horVer: "Horizontal" | "Vertical" = "Horizontal";
