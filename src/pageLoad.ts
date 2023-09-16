@@ -80,8 +80,13 @@ function changeIntroText(paragraph: HTMLParagraphElement): void {
   paragraph.innerText = "Place your ships on your Board. Choose wisely! Good luck captain!";
 }
 
+// function to create the overall game div
 function createGameDiv(game: Game): void {
+  // create element
   const div: HTMLDivElement = document.createElement("div");
+  // give it characteristics
+  div.id = "gameDiv";
+  // style element
   div.classList.add(
     "bg-black/30",
     "rounded-xl",
@@ -93,48 +98,85 @@ function createGameDiv(game: Game): void {
     "p-2",
     "flex-grow"
   );
-  div.id = "gameDiv";
-  main.appendChild(div);
+  // -- create child elements //
   const computerBoard: HTMLDivElement = loadPlayerDiv(game.computer, "Enemy");
   const playerBoard: HTMLDivElement = loadPlayerDiv(game.player, "You");
+
+  // append child elements to elements
   div.appendChild(computerBoard);
   div.appendChild(playerBoard);
+  // append the div to the DOM
+  main.appendChild(div);
+  // function to make the ships for the player draggable
   makeShipsPlaceable(game.player);
 }
 
+// function to create the player div including the gameboard and the ships on the right side of it
 function loadPlayerDiv(player: Player, name: String): HTMLDivElement {
+  // create element
   const div: HTMLDivElement = document.createElement("div");
+  // style element
   div.classList.add("p-2", "bg-black/30", "rounded-xl", "flex-grow");
+  // -- create child elements //
+  // First child //
+  // create element
   const headingdiv: HTMLDivElement = document.createElement("div");
-  headingdiv.classList.add("flex", "justify-between");
+  // give it characteristics
   headingdiv.id = "playerHeadingDiv";
+  // style element
+  headingdiv.classList.add("flex", "justify-between");
+  // -- create grandchild elements //
+  // First grandchild //
+  // create element
   const heading: HTMLHeadingElement = document.createElement("h3");
+  // give it characteristics
   heading.innerText = name === "Enemy" ? "Enemy Board" : "Your Board";
+  // style element
   heading.classList.add("font-bold");
-  const subDiv: HTMLDivElement = document.createElement("div");
-  subDiv.classList.add("flex", "gap-3");
-  subDiv.id = `${player.name}-subDiv`;
-  div.appendChild(headingdiv);
+  // Second grandchild //
+  // create element
+  const horVerBut: HTMLDivElement | null = player.name === "Player" ? createHorVerButton() : null;
+  // append grandchild elements to child element
   headingdiv.appendChild(heading);
-  div.appendChild(subDiv);
+  if (player.name === "Player") headingdiv.appendChild(horVerBut);
+  // Second child //
+  // create element
+  const subDiv: HTMLDivElement = document.createElement("div");
+  // give it characteristics
+  subDiv.id = `${player.name}-subDiv`;
+  // style element
+  subDiv.classList.add("flex", "gap-3");
+  // append granchild elements to child element
   subDiv.appendChild(loadGameBoard(player));
-  if (player.name === "Player") {
-    createShipsDiv(subDiv, player);
-    createHorVerButton(headingdiv);
-  }
+  if (player.name === "Player") subDiv.appendChild(createShipsDiv(player));
+
+  // append child elements to element
+  div.appendChild(headingdiv);
+  div.appendChild(subDiv);
+  // return div
   return div;
 }
 
+// function to load GameBoard initially
 function loadGameBoard(player: Player): HTMLDivElement {
+  // create element
   const div: HTMLDivElement = document.createElement("div");
-  div.classList.add("playGround", "bg-black");
+  // give it characteristics
   div.id = player.name;
+  // style element
+  div.classList.add("playGround", "bg-black");
+  // create child elements
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
+      // create element
       const miniDiv: HTMLDivElement = document.createElement("div");
-      miniDiv.classList.add("rounded", "bg-gray-200", "miniDiv");
-      div.appendChild(miniDiv);
+      // give it characteristics
       miniDiv.id = `${i}-${j}`;
+      // style element
+      miniDiv.classList.add("rounded", "bg-gray-200", "miniDiv");
+      // append child element to element
+      div.appendChild(miniDiv);
+      // make the coord div a target for drag and drop
       if (player.name === "Player") {
         miniDiv.addEventListener("dragover", handleDragOver);
         miniDiv.addEventListener("dragenter", handleDragEnter);
@@ -142,9 +184,6 @@ function loadGameBoard(player: Player): HTMLDivElement {
         miniDiv.addEventListener("drop", handleDrop);
       }
     }
-  }
-  if (player.name === "Player") {
-    printGameBoard(player, div);
   }
   return div;
 }
@@ -253,7 +292,7 @@ function checkShips() {
     const gameBoardDiv: HTMLDivElement = document.getElementById("Enemy") as HTMLDivElement;
     addOnClickToEnemeyBoard(gameBoardDiv);
     const div: HTMLDivElement = document.getElementById("Enemy-subDiv") as HTMLDivElement;
-    createShipsDiv(div, game.computer);
+    div.appendChild(createShipsDiv(game.computer));
     const buttonDiv: HTMLDivElement = document.getElementById("buttonDiv") as HTMLDivElement;
     buttonDiv.remove();
     const introParagraph: HTMLParagraphElement = document.getElementById("introPar") as HTMLParagraphElement;
@@ -261,11 +300,10 @@ function checkShips() {
   }
 }
 
-function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
+function createShipsDiv(player: Player): HTMLDivElement {
   const div: HTMLDivElement = document.createElement("div");
   div.id = "shipsDiv";
   div.classList.add("flex", "flex-col", "gap-1", "sm:gap-3", "flex-wrap", "sm:flex-nowrap");
-  bigDiv.appendChild(div);
   const carrier: HTMLDivElement = document.createElement("div");
   carrier.classList.add("flex", "boat", "bg-black");
   for (let i = 0; i < 5; i++) {
@@ -311,9 +349,11 @@ function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
   }
   destroyer.id = `${player.name}-destroyer`;
   div.appendChild(destroyer);
+
+  return div;
 }
 
-function createHorVerButton(bigDiv: HTMLDivElement) {
+function createHorVerButton(): HTMLDivElement {
   const div: HTMLDivElement = document.createElement("div");
   div.id = "buttonDiv";
   horVer = "Horizontal";
@@ -328,7 +368,6 @@ function createHorVerButton(bigDiv: HTMLDivElement) {
   div.classList.add("flex");
   horizontalBut.classList.add("border", "border-black", "px-1", "bg-gray-400", "text-black", "rounded-l", "mb-1");
   verticalBut.classList.add("border", "border-black", "px-1", "bg-white", "text-black", "rounded-r", "mb-1");
-  bigDiv.appendChild(div);
 
   function makeThingsHorizontal() {
     horizontalBut.classList.toggle("bg-gray-400");
@@ -364,6 +403,7 @@ function createHorVerButton(bigDiv: HTMLDivElement) {
 
   verticalBut.addEventListener("click", makeThingsVertical);
   horizontalBut.addEventListener("click", makeThingsHorizontal);
+  return div;
 }
 
 function makeShipsPlaceable(player: Player) {
