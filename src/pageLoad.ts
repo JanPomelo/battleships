@@ -301,6 +301,7 @@ function createShipsDiv(bigDiv: HTMLDivElement, player: Player) {
 function createHorVerButton(bigDiv: HTMLDivElement) {
   const div: HTMLDivElement = document.createElement("div");
   div.id = "buttonDiv";
+  horVer = 'Horizontal';
   const horizontalBut: HTMLButtonElement = document.createElement("button");
   horizontalBut.id = "hori";
   horizontalBut.innerText = "Horizontal";
