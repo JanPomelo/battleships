@@ -4,10 +4,13 @@ import { Player } from "./player";
 import { Game, checkEnd } from "./game";
 import { Ship } from "./ship";
 import "drag-drop-touch";
+import { Gameboard } from "./gameboard";
 
 const main: HTMLDivElement = document.getElementById("main") as HTMLDivElement;
 let game = startNewGame();
 let horVer: "Horizontal" | "Vertical" = "Horizontal";
+let possiblePlace: boolean = true;
+let length: number;
 
 // Function to load the background image
 export function loadBGImg() {
@@ -171,7 +174,7 @@ function loadGameBoard(player: Player): HTMLDivElement {
       // create element
       const miniDiv: HTMLDivElement = document.createElement("div");
       // give it characteristics
-      miniDiv.id = `${i}-${j}`;
+      miniDiv.id = `${player.name}-${i}-${j}`;
       // style element
       miniDiv.classList.add("rounded", "bg-gray-200", "miniDiv");
       // append child element to element
@@ -193,8 +196,8 @@ function addOnClickToEnemeyBoard(bigDiv: HTMLDivElement) {
   // for each div
   for (let i = 0; i < bigDiv.children.length; i++) {
     bigDiv.children[i].addEventListener("click", () => {
-      const row: number = Number(bigDiv.children[i].id.substring(0, 1));
-      const col: number = Number(bigDiv.children[i].id.substring(2));
+      const row: number = Number(bigDiv.children[i].id.substr(-3,1));
+      const col: number = Number(bigDiv.children[i].id.substr(-1));
       if (!game.computer.board.receiveAttack([row, col])) {
         game.computer.makeMove(null, game.player);
         printGameBoard(game.computer, bigDiv);
@@ -211,9 +214,12 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
   //
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
-      if (player.name === "Player" && player.board.board[i][j] instanceof Ship) {
+      if (player.board.board[i][j] === null) {
+        div.children[Number(i.toString() + j.toString())].classList.add("bg-gray-200");
+        div.children[Number(i.toString() + j.toString())].classList.remove("bg-green-400");
+      } else if (player.name === "Player" && player.board.board[i][j] instanceof Ship) {
         div.children[Number(i.toString() + j.toString())].classList.add("bg-green-400");
-        div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200");
+        div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200", 'bg-green-800');
       }
       if (player.board.board[i][j] instanceof Ship) {
         const shipi: Ship = player.board.board[i][j] as Ship;
@@ -242,7 +248,6 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
 
 function handleDragStart(e: DragEvent) {
   this.classList.add("opacity-60");
-  let length: number;
   switch (this.children.length) {
     case 5:
       length = 5;
@@ -271,20 +276,98 @@ function handleDragOver(e: DragEvent) {
 }
 
 function handleDragEnter(e: DragEvent) {
-  this.classList.add("over");
+  let shipSpaceRows: number[] = [];
+  let shipSpaceCols: number[] = [];
+  const row: number = Number(this.id.substr(-3, 1));
+  const column: number = Number(this.id.substr(-1));
+  if (horVer === "Horizontal") {
+    for (let i = 0; i < length; i++) {
+      shipSpaceRows.push(row);
+    }
+    shipSpaceCols = game.player.board._createShipPlacementArr(length, column);
+  } else {
+    for (let i = 0; i < length; i++) {
+      shipSpaceCols.push(column);
+    }
+    shipSpaceRows = game.player.board._createShipPlacementArr(length, row);
+  }
+  // check if the space where the boat should be placed is available
+  if (!game.player.board._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
+    for (let i = 0; i < shipSpaceCols.length; i++) {
+      const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
+      //div.classList.add("bg-red-200");
+      //div.classList.remove("bg-gray-200", "bg-green-400");
+    }
+  } else {
+    for (let i = 0; i < shipSpaceCols.length; i++) {
+      const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
+      div.classList.add("bg-green-800");
+      div.classList.remove("bg-gray-200", "bg-orange-300");
+    }
+  }
+  /*let length: string = e.dataTransfer.getData("text/plain");
+  const ship: Ship = new Ship(Number(length));
+  const row: number = Number(this.id.substring(0, 1));
+  const column: number = Number(this.id.substring(2));
+  if (game.player.board.placeShip(ship, horVer, [row, column]) === undefined) {
+    printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+    
+    possiblePlace = true;
+  } else {
+    possiblePlace = false;
+  }
+  */
 }
 
-function handleDragLeave() {
-  this.classList.remove("over");
+function handleDragLeave(e: DragEvent) {
+  let shipSpaceRows: number[] = [];
+  let shipSpaceCols: number[] = [];
+  const row: number = Number(this.id.substr(-3, 1));
+  const column: number = Number(this.id.substr(-1));
+  if (horVer === "Horizontal") {
+    for (let i = 0; i < length; i++) {
+      shipSpaceRows.push(row);
+    }
+    shipSpaceCols = game.player.board._createShipPlacementArr(length, column);
+  } else {
+    for (let i = 0; i < length; i++) {
+      shipSpaceCols.push(column);
+    }
+    shipSpaceRows = game.player.board._createShipPlacementArr(length, row);
+  }
+  // check if the space where the boat should be placed is available
+  if (!game.player.board._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
+    for (let i = 0; i < shipSpaceCols.length; i++) {
+      const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
+      //div.classList.remove("bg-red-200");
+      //div.classList.add("bg-gray-200");
+    }
+  } else {
+    for (let i = 0; i < shipSpaceCols.length; i++) {
+      const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
+      div.classList.remove("bg-green-800");
+      div.classList.add("bg-gray-200");
+    }
+  }
+  /*
+  if (possiblePlace) {
+    let length: string = e.dataTransfer.getData("text/plain");
+    const ship: Ship = new Ship(Number(length));
+    const row: number = Number(this.id.substring(0, 1));
+    const column: number = Number(this.id.substring(2));
+    game.player.board.removeShip(ship, horVer, [row, column]);
+  printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+   */
 }
 
 function handleDrop(e: DragEvent) {
   this.style.opacity = 1;
   e.stopPropagation(); // stops the browser from redirecting.
-  let length: string = e.dataTransfer.getData("text/plain");
+  //let length: string = e.dataTransfer.getData("text/plain");
+  printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
   const ship: Ship = new Ship(Number(length));
-  const row: number = Number(this.id.substring(0, 1));
-  const column: number = Number(this.id.substring(2));
+  const row: number = Number(this.id.substr(-3, 1));
+  const column: number = Number(this.id.substr(-1));
   if (game.player.board.placeShip(ship, horVer, [row, column]) === undefined) {
     printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
     const draggedShip: HTMLDivElement = document.getElementById(e.dataTransfer.getData("texto")) as HTMLDivElement;
@@ -426,7 +509,6 @@ function createHorVerButton(): HTMLDivElement {
 function makeShipsPlaceable(player: Player) {
   const boats: HTMLDivElement[] = [];
   boats.push(document.getElementById(`${player.name}-carrier`) as HTMLDivElement);
-  console.log(document.getElementById(`${player.name}-carrier`));
   boats.push(document.getElementById(`${player.name}-battleship`) as HTMLDivElement);
   boats.push(document.getElementById(`${player.name}-cruiser`) as HTMLDivElement);
   boats.push(document.getElementById(`${player.name}-submarine`) as HTMLDivElement);
@@ -448,10 +530,9 @@ function checkSunkStatus(player: Player) {
   boats.push(document.getElementById(`${player.name}-destroyer`) as HTMLDivElement);
 
   const playerBoardShipsSorted = player.board.ships.sort(compare);
-  console.log(playerBoardShipsSorted);
+
   for (let i = 0; i < playerBoardShipsSorted.length; i++) {
     if (playerBoardShipsSorted[i].isSunk()) {
-      //console.log(boats[i].children[0].classList);
       for (let j = 0; j < boats[i].children.length; j++) {
         boats[i].children[j].classList.remove("bg-green-400");
         boats[i].children[j].classList.add("bg-gray-700");

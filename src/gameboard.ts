@@ -47,8 +47,29 @@ export class Gameboard {
     }
     this.ships.push(ship);
   }
+
+  /*removeShip(ship: Ship, direction: 'Horizontal' | 'Vertical', coords: number[]) {
+    let shipSpaceRows: number[] = [];
+    let shipSpaceCols: number[] = [];
+    if (direction === "Horizontal") {
+      for (let i = 0; i < ship.length; i++) {
+        shipSpaceRows.push(coords[0]);
+      }
+      shipSpaceCols = this._createShipPlacementArr(ship.length, coords[1]);
+    } else {
+      for (let i = 0; i < ship.length; i++) {
+        shipSpaceCols.push(coords[1]);
+      }
+      shipSpaceRows = this._createShipPlacementArr(ship.length, coords[0]);
+    }
+    for (let i = 0; i < shipSpaceCols.length; i++) {
+      this.board[shipSpaceRows[i]][shipSpaceCols[i]] = null;
+    }
+    this.ships.pop();
+  }
+  */
   // helper function to check if the tiles where the boat should be placed are available or already occupied by another ship
-  private _checkIfSpaceIsFree(row: number[], col: number[]) {
+  _checkIfSpaceIsFree(row: number[], col: number[]) {
     for (let i = 0; i < row.length; i++) {
       if (this.board[row[i]][col[i]] != null) {
         return false;
@@ -58,7 +79,7 @@ export class Gameboard {
   }
 
   // helper function to cover all corner cases for the variable row/column (if the ship is placed on the outer tiles)
-  private _createShipPlacementArr(shipLength: number, coordPoint: number): number[] {
+  _createShipPlacementArr(shipLength: number, coordPoint: number): number[] {
     const placementArr: number[] = [];
     if (shipLength === 5) {
       if (coordPoint < 2) {
