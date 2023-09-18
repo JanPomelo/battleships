@@ -18,33 +18,20 @@ export function startNewGame(): Game {
 }
 
 function placeAllShips(player: Player) {
-  const carrier: Ship = new Ship(5);
-  const battleship: Ship = new Ship(4);
-  const cruiser: Ship = new Ship(3);
-  const submarine: Ship = new Ship(3);
-  const destroyer: Ship = new Ship(2);
-  const shipsToPlace: Ship[] = [carrier, battleship, cruiser, submarine, destroyer];
-
-  if (player.name === "Player") {
-    player.board.placeShip(carrier, "Horizontal", [0, 0]);
-    player.board.placeShip(battleship, "Vertical", [9, 9]);
-    player.board.placeShip(cruiser, "Horizontal", [2, 0]);
-    player.board.placeShip(submarine, "Horizontal", [4, 0]);
-    player.board.placeShip(destroyer, "Horizontal", [6, 0]);
-    
-  } else {
-    for (let i = 0; i < shipsToPlace.length; i++) {
+  
+  const shipLength: number[] = [5, 4, 3, 3, 2];
+    for (let i = 0; i < shipLength.length; i++) {
       let shipPlaced: undefined | Error;
       do {
         const row: number = Math.floor(Math.random() * 10);
         const column: number = Math.floor(Math.random() * 10);
-        const horVer: number = Math.floor(Math.random() * 2);
+        let horVer: number = Math.floor(Math.random() * 2);
         const horVerString: "Vertical" | "Horizontal" = horVer === 1 ? "Vertical" : "Horizontal";
-        shipPlaced = player.board.placeShip(shipsToPlace[i], horVerString, [row, column]);
+        shipPlaced = player.board.placeShip(new Ship(shipLength[i], horVerString), horVerString, [row, column]);
       } while (shipPlaced);
     }
   }
-}
+
 
 export function checkEnd(game: Game): string {
   if (game.player.board.allSunk()) {

@@ -5,11 +5,13 @@ export class Ship {
   hits: number;
   sunk: boolean;
   hitCoords: number[][];
-  constructor(length: number) {
+  direction: 'Horizontal' | 'Vertical'
+  constructor(length: number, direction: 'Horizontal' | 'Vertical') {
     this.length = length;
     this.hits = 0;
     this.sunk = false;
     this.hitCoords = [];
+    this.direction = direction;
   }
   hit(i: number, j: number) {
     this.hitCoords.push([i,j])

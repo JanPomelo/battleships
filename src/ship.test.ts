@@ -1,5 +1,5 @@
 import { Ship } from "./ship";
-const ship = new Ship(3);
+const ship = new Ship(3, 'Horizontal');
 
 describe("Ship Class Test", () => {
   

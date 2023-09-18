@@ -9,7 +9,6 @@ import { Gameboard } from "./gameboard";
 const main: HTMLDivElement = document.getElementById("main") as HTMLDivElement;
 let game = startNewGame();
 let horVer: "Horizontal" | "Vertical" = "Horizontal";
-let possiblePlace: boolean = true;
 let length: number;
 
 // Function to load the background image
@@ -292,31 +291,13 @@ function handleDragEnter(e: DragEvent) {
     shipSpaceRows = game.player.board._createShipPlacementArr(length, row);
   }
   // check if the space where the boat should be placed is available
-  if (!game.player.board._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
-    for (let i = 0; i < shipSpaceCols.length; i++) {
-      const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
-      //div.classList.add("bg-red-200");
-      //div.classList.remove("bg-gray-200", "bg-green-400");
-    }
-  } else {
+  if (game.player.board._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
     for (let i = 0; i < shipSpaceCols.length; i++) {
       const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
       div.classList.add("bg-green-800");
       div.classList.remove("bg-gray-200", "bg-orange-300");
     }
   }
-  /*let length: string = e.dataTransfer.getData("text/plain");
-  const ship: Ship = new Ship(Number(length));
-  const row: number = Number(this.id.substring(0, 1));
-  const column: number = Number(this.id.substring(2));
-  if (game.player.board.placeShip(ship, horVer, [row, column]) === undefined) {
-    printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
-    
-    possiblePlace = true;
-  } else {
-    possiblePlace = false;
-  }
-  */
 }
 
 function handleDragLeave(e: DragEvent) {
@@ -336,36 +317,20 @@ function handleDragLeave(e: DragEvent) {
     shipSpaceRows = game.player.board._createShipPlacementArr(length, row);
   }
   // check if the space where the boat should be placed is available
-  if (!game.player.board._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
-    for (let i = 0; i < shipSpaceCols.length; i++) {
-      const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
-      //div.classList.remove("bg-red-200");
-      //div.classList.add("bg-gray-200");
-    }
-  } else {
+  if (game.player.board._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
     for (let i = 0; i < shipSpaceCols.length; i++) {
       const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
       div.classList.remove("bg-green-800");
       div.classList.add("bg-gray-200");
     }
   }
-  /*
-  if (possiblePlace) {
-    let length: string = e.dataTransfer.getData("text/plain");
-    const ship: Ship = new Ship(Number(length));
-    const row: number = Number(this.id.substring(0, 1));
-    const column: number = Number(this.id.substring(2));
-    game.player.board.removeShip(ship, horVer, [row, column]);
-  printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
-   */
 }
 
 function handleDrop(e: DragEvent) {
   this.style.opacity = 1;
   e.stopPropagation(); // stops the browser from redirecting.
-  //let length: string = e.dataTransfer.getData("text/plain");
   printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
-  const ship: Ship = new Ship(Number(length));
+  const ship: Ship = new Ship(Number(length), horVer);
   const row: number = Number(this.id.substr(-3, 1));
   const column: number = Number(this.id.substr(-1));
   if (game.player.board.placeShip(ship, horVer, [row, column]) === undefined) {
@@ -375,6 +340,8 @@ function handleDrop(e: DragEvent) {
     draggedShip.classList.add("opacity-60");
     draggedShip.draggable = false;
     checkShips();
+    this.addEventListener('dragstart', handleDragReStart);
+    this.draggable = true;
   }
   return false;
 }
@@ -595,4 +562,12 @@ export function createEndScreen() {
       changeIntroText(introPar);
     });
   }
+}
+
+function handleDragReStart(e: DragEvent) {
+  const board: Gameboard = game.player.board;
+  const row: number = Number(this.id.substr(-3,1));
+  const column: number = Number(this.id.substr(-1));
+  console.log({ row, column });
+  //const ship: Ship;
 }
