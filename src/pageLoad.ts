@@ -20,9 +20,8 @@ export function loadBGImg() {
 }
 // Function to write the Introduction test
 export function writeIntroduction() {
-  // create element
+  // element divider //
   const div: HTMLDivElement = document.createElement("div");
-  // style element
   div.classList.add(
     "bg-black/30",
     "text-white",
@@ -37,19 +36,14 @@ export function writeIntroduction() {
     "xl:gap-10"
   );
   // -- create child elements //
-  // First //
-  // create element
+  // element divider //
   const introParagraph: HTMLParagraphElement = document.createElement("p");
-  // give it characteristics
   introParagraph.innerText =
     "Are you ready for an epic battleship fight? Destroy all of the enemy ships before your enemy destroys yours to win. Sounds easy? Well, try it out captain and press the play button!";
   introParagraph.id = "introPar";
-  // style element
   introParagraph.classList.add("font-bold", "h-fit-content", "sm:h-16", "xl:h-6");
-  // Second //
-  // create element
+  // element divider //
   const playButton: HTMLButtonElement = document.createElement("button");
-  // give it characteristics
   playButton.addEventListener("click", () => {
     // when the Play Button is pressed, change the intro text and start the game. Also remove the button from the DOM
     changeIntroText(introParagraph);
@@ -57,7 +51,6 @@ export function writeIntroduction() {
     playButton.remove();
   });
   playButton.innerText = "Play";
-  // style element
   playButton.classList.add(
     "rounded-lg",
     "text-black",
@@ -84,11 +77,9 @@ function changeIntroText(paragraph: HTMLParagraphElement): void {
 
 // function to create the overall game div
 function createGameDiv(game: Game): void {
-  // create element
+  /// element divider //
   const div: HTMLDivElement = document.createElement("div");
-  // give it characteristics
   div.id = "gameDiv";
-  // style element
   div.classList.add(
     "bg-black/30",
     "rounded-xl",
@@ -115,68 +106,50 @@ function createGameDiv(game: Game): void {
 
 // function to create the player div including the gameboard and the ships on the right side of it
 function loadPlayerDiv(player: Player, name: String): HTMLDivElement {
-  // create element
+  // element divider //
   const div: HTMLDivElement = document.createElement("div");
-  // style element
   div.classList.add("p-2", "bg-black/30", "rounded-xl", "flex-grow");
   // -- create child elements //
-  // First child //
-  // create element
+  // element divider //
   const headingdiv: HTMLDivElement = document.createElement("div");
-  // give it characteristics
   headingdiv.id = "playerHeadingDiv";
-  // style element
   headingdiv.classList.add("flex", "justify-between");
   // -- create grandchild elements //
-  // First grandchild //
-  // create element
+  // element divider //
   const heading: HTMLHeadingElement = document.createElement("h3");
-  // give it characteristics
   heading.innerText = name === "Enemy" ? "Enemy Board" : "Your Board";
-  // style element
   heading.classList.add("font-bold");
-  // Second grandchild //
-  // create element
+  // element divider //
   const horVerBut: HTMLDivElement | null = player.name === "Player" ? createHorVerButton() : null;
   // append grandchild elements to child element
   headingdiv.appendChild(heading);
   if (player.name === "Player") headingdiv.appendChild(horVerBut);
-  // Second child //
-  // create element
+  // element divider //
   const subDiv: HTMLDivElement = document.createElement("div");
-  // give it characteristics
   subDiv.id = `${player.name}-subDiv`;
-  // style element
   subDiv.classList.add("flex", "gap-3");
   // append granchild elements to child element
   subDiv.appendChild(loadGameBoard(player));
   if (player.name === "Player") subDiv.appendChild(createShipsDiv(player));
-
   // append child elements to element
   div.appendChild(headingdiv);
   div.appendChild(subDiv);
-  // return div
   return div;
 }
 
 // function to load GameBoard initially
 function loadGameBoard(player: Player): HTMLDivElement {
-  // create element
+  // element divider //
   const div: HTMLDivElement = document.createElement("div");
-  // give it characteristics
   div.id = player.name;
-  // style element
   div.classList.add("playGround", "bg-black");
   // create child elements
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
-      // create element
+      // element divider //
       const miniDiv: HTMLDivElement = document.createElement("div");
-      // give it characteristics
       miniDiv.id = `${player.name}-${i}-${j}`;
-      // style element
       miniDiv.classList.add("rounded", "bg-gray-200", "miniDiv");
-      // append child element to element
       div.appendChild(miniDiv);
       // make the coord div a target for drag and drop
       if (player.name === "Player") {
@@ -191,37 +164,47 @@ function loadGameBoard(player: Player): HTMLDivElement {
 }
 
 // function to add an OnClick event to the divs on the enemy board
-function addOnClickToEnemeyBoard(bigDiv: HTMLDivElement) {
+function addOnClickToEnemyBoard(bigDiv: HTMLDivElement) {
   // for each div
   for (let i = 0; i < bigDiv.children.length; i++) {
     bigDiv.children[i].addEventListener("click", () => {
+      // get the row and column which is located in the ID of the div
       const row: number = Number(bigDiv.children[i].id.substr(-3, 1));
       const col: number = Number(bigDiv.children[i].id.substr(-1));
+      // if the field clicked is free and can be attacked
       if (!game.computer.board.receiveAttack([row, col])) {
+        //make the pc move afterwards
         game.computer.makeMove(null, game.player);
+        //print both boards
         printGameBoard(game.computer, bigDiv);
         printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+        // check the sunk status of all ships
         checkSunkStatus(game.computer);
         checkSunkStatus(game.player);
+        // create EndScreen if necessary
         createEndScreen();
       }
     });
   }
 }
 
+// function to print the gameboard after each alternation of the gameboard
 export function printGameBoard(player: Player, div: HTMLDivElement) {
-  //
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
+      // if the field is undiscovered
       if (player.board.board[i][j] === null) {
         div.children[Number(i.toString() + j.toString())].classList.add("bg-gray-200");
         div.children[Number(i.toString() + j.toString())].classList.remove("bg-green-400");
+        // if a ship is placed on this field on the player board
       } else if (player.name === "Player" && player.board.board[i][j] instanceof Ship) {
         div.children[Number(i.toString() + j.toString())].classList.add("bg-green-400");
         div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200", "bg-green-800");
       }
+      // if a ship is on this field
       if (player.board.board[i][j] instanceof Ship) {
         const shipi: Ship = player.board.board[i][j] as Ship;
+        // if the ship is sunk
         if (shipi.isSunk()) {
           div.children[Number(i.toString() + j.toString())].classList.remove(
             "bg-green-400",
@@ -229,6 +212,7 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
             "bg-red-300"
           );
           div.children[Number(i.toString() + j.toString())].classList.add("bg-gray-700");
+          // if its not sunk, but hit
         } else {
           for (let k = 0; k < shipi.hitCoords.length; k++) {
             if (i === shipi.hitCoords[k][0] && j === shipi.hitCoords[k][1]) {
@@ -237,6 +221,7 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
             }
           }
         }
+        // if the field is discovered, but its just water
       } else if (player.board.board[i][j] === "Sea") {
         div.children[Number(i.toString() + j.toString())].classList.add("bg-blue-400");
         div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200");
@@ -364,7 +349,7 @@ function checkShips() {
       shipsDiv.children[i].classList.remove("opacity-60");
     }
     const gameBoardDiv: HTMLDivElement = document.getElementById("Enemy") as HTMLDivElement;
-    addOnClickToEnemeyBoard(gameBoardDiv);
+    addOnClickToEnemyBoard(gameBoardDiv);
     const div: HTMLDivElement = document.getElementById("Enemy-subDiv") as HTMLDivElement;
     div.appendChild(createShipsDiv(game.computer));
     const buttonDiv: HTMLDivElement = document.getElementById("buttonDiv") as HTMLDivElement;
