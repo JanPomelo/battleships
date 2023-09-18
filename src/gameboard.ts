@@ -48,26 +48,21 @@ export class Gameboard {
     this.ships.push(ship);
   }
 
-  /*removeShip(ship: Ship, direction: 'Horizontal' | 'Vertical', coords: number[]) {
-    let shipSpaceRows: number[] = [];
-    let shipSpaceCols: number[] = [];
-    if (direction === "Horizontal") {
-      for (let i = 0; i < ship.length; i++) {
-        shipSpaceRows.push(coords[0]);
+  removeShip(ship: Ship) {
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        if (this.board[i][j] === ship) {
+          this.board[i][j] = null;
+        }
       }
-      shipSpaceCols = this._createShipPlacementArr(ship.length, coords[1]);
-    } else {
-      for (let i = 0; i < ship.length; i++) {
-        shipSpaceCols.push(coords[1]);
+    } 
+    for (let i = 0; this.ships.length; i++) {
+      if (this.ships[i] === ship) {
+        this.ships.splice(i, 1);
       }
-      shipSpaceRows = this._createShipPlacementArr(ship.length, coords[0]);
     }
-    for (let i = 0; i < shipSpaceCols.length; i++) {
-      this.board[shipSpaceRows[i]][shipSpaceCols[i]] = null;
-    }
-    this.ships.pop();
   }
-  */
+
   // helper function to check if the tiles where the boat should be placed are available or already occupied by another ship
   _checkIfSpaceIsFree(row: number[], col: number[]) {
     for (let i = 0; i < row.length; i++) {

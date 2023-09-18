@@ -195,7 +195,7 @@ function addOnClickToEnemeyBoard(bigDiv: HTMLDivElement) {
   // for each div
   for (let i = 0; i < bigDiv.children.length; i++) {
     bigDiv.children[i].addEventListener("click", () => {
-      const row: number = Number(bigDiv.children[i].id.substr(-3,1));
+      const row: number = Number(bigDiv.children[i].id.substr(-3, 1));
       const col: number = Number(bigDiv.children[i].id.substr(-1));
       if (!game.computer.board.receiveAttack([row, col])) {
         game.computer.makeMove(null, game.player);
@@ -218,7 +218,7 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
         div.children[Number(i.toString() + j.toString())].classList.remove("bg-green-400");
       } else if (player.name === "Player" && player.board.board[i][j] instanceof Ship) {
         div.children[Number(i.toString() + j.toString())].classList.add("bg-green-400");
-        div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200", 'bg-green-800');
+        div.children[Number(i.toString() + j.toString())].classList.remove("bg-gray-200", "bg-green-800");
       }
       if (player.board.board[i][j] instanceof Ship) {
         const shipi: Ship = player.board.board[i][j] as Ship;
@@ -327,21 +327,29 @@ function handleDragLeave(e: DragEvent) {
 }
 
 function handleDrop(e: DragEvent) {
-  this.style.opacity = 1;
+
   e.stopPropagation(); // stops the browser from redirecting.
   printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
-  const ship: Ship = new Ship(Number(length), horVer);
+  const draggedShip: HTMLDivElement = document.getElementById(e.dataTransfer.getData("texto")) as HTMLDivElement;
+  const shipName: string = draggedShip.id.substring(7);
+  const ship: Ship = new Ship(Number(length), horVer, shipName);
   const row: number = Number(this.id.substr(-3, 1));
   const column: number = Number(this.id.substr(-1));
   if (game.player.board.placeShip(ship, horVer, [row, column]) === undefined) {
     printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
-    const draggedShip: HTMLDivElement = document.getElementById(e.dataTransfer.getData("texto")) as HTMLDivElement;
     draggedShip.removeEventListener("dragend", handleDragEnd);
     draggedShip.classList.add("opacity-60");
     draggedShip.draggable = false;
     checkShips();
-    this.addEventListener('dragstart', handleDragReStart);
-    this.draggable = true;
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        if (game.player.board.board[i][j] === ship) {
+          const div = document.getElementById(`Player-${i}-${j}`);
+          div.addEventListener("dragstart", handleDragReStart);
+          div.draggable = true;
+        }
+      }
+    }
   }
   return false;
 }
@@ -566,8 +574,15 @@ export function createEndScreen() {
 
 function handleDragReStart(e: DragEvent) {
   const board: Gameboard = game.player.board;
-  const row: number = Number(this.id.substr(-3,1));
+  const row: number = Number(this.id.substr(-3, 1));
   const column: number = Number(this.id.substr(-1));
-  console.log({ row, column });
-  //const ship: Ship;
+  const ship: Ship = board.board[row][column] as Ship;
+  length = ship.length;
+  board.removeShip(ship);
+  printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+  const shipDiv: HTMLDivElement = document.getElementById(`Player-${ship.name}`) as HTMLDivElement;
+  e.dataTransfer.setData('texto', shipDiv.id);
+  shipDiv.classList.remove('opacity-60');
+  shipDiv.draggable = true;
+
 }

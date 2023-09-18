@@ -19,15 +19,15 @@ export function startNewGame(): Game {
 
 function placeAllShips(player: Player) {
   
-  const shipLength: number[] = [5, 4, 3, 3, 2];
-    for (let i = 0; i < shipLength.length; i++) {
+  const ships: (number | string)[][] = [[5, 'carrier'], [4, 'battleship'], [3, 'submarine'], [3, 'cruiser'], [2, 'destroyer']];
+    for (let i = 0; i < ships.length; i++) {
       let shipPlaced: undefined | Error;
       do {
         const row: number = Math.floor(Math.random() * 10);
         const column: number = Math.floor(Math.random() * 10);
         let horVer: number = Math.floor(Math.random() * 2);
         const horVerString: "Vertical" | "Horizontal" = horVer === 1 ? "Vertical" : "Horizontal";
-        shipPlaced = player.board.placeShip(new Ship(shipLength[i], horVerString), horVerString, [row, column]);
+        shipPlaced = player.board.placeShip(new Ship(ships[i][0] as number, horVerString, ships[i][1] as string), horVerString, [row, column]);
       } while (shipPlaced);
     }
   }
