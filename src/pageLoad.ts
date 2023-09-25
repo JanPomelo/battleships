@@ -241,11 +241,15 @@ function handleDragStart(e: DragEvent) {
   e.dataTransfer.setData("divID", this.id);
 }
 
+// function to handle the dragend event
 function handleDragEnd() {
+  // remove opac
   this.classList.remove("opacity-60");
 }
 
+// function to handle the dragover event
 function handleDragOver(e: DragEvent) {
+  // prevent default behaviour
   e.preventDefault();
   return false;
 }
