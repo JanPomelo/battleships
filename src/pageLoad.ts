@@ -230,24 +230,15 @@ export function printGameBoard(player: Player, div: HTMLDivElement) {
   }
 }
 
+// function to handle the dragstart event
 function handleDragStart(e: DragEvent) {
+  // make the div a little bit opac
   this.classList.add("opacity-60");
-  switch (this.children.length) {
-    case 5:
-      length = 5;
-      break;
-    case 4:
-      length = 4;
-      break;
-    case 2:
-      length = 2;
-      break;
-    default:
-      length = 3;
-      break;
-  }
+  // set the length variable for the shipLength to the amount of children of the div
+  length = this.children.length;
+  // set dataTransfer data
   e.dataTransfer.setData("text/plain", length.toString());
-  e.dataTransfer.setData("texto", this.id);
+  e.dataTransfer.setData("divID", this.id);
 }
 
 function handleDragEnd() {
@@ -314,7 +305,7 @@ function handleDragLeave(e: DragEvent) {
 function handleDrop(e: DragEvent) {
   e.stopPropagation(); // stops the browser from redirecting.
   printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
-  const draggedShip: HTMLDivElement = document.getElementById(e.dataTransfer.getData("texto")) as HTMLDivElement;
+  const draggedShip: HTMLDivElement = document.getElementById(e.dataTransfer.getData("divID")) as HTMLDivElement;
   const shipName: string = draggedShip.id.substring(7);
   const ship: Ship = new Ship(Number(length), horVer, shipName);
   const row: number = Number(this.id.substr(-3, 1));
@@ -338,7 +329,7 @@ function handleDrop(e: DragEvent) {
   return false;
 }
 
-function checkShips() {
+export function checkShips() {
   if (game.player.board.ships.length > 4) {
     const shipsDiv = document.getElementById("shipsDiv");
     shipsDiv.classList.remove("mb-auto");
@@ -566,7 +557,7 @@ function handleDragReStart(e: DragEvent) {
   board.removeShip(ship);
   printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
   const shipDiv: HTMLDivElement = document.getElementById(`Player-${ship.name}`) as HTMLDivElement;
-  e.dataTransfer.setData("texto", shipDiv.id);
+  e.dataTransfer.setData("divID", shipDiv.id);
   shipDiv.classList.remove("opacity-60");
   shipDiv.draggable = true;
 }
