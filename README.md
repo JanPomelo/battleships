@@ -90,3 +90,18 @@ BattleShip Game for the Odin Project
 
 > attacks the other players board at the given coordinates
 > **returns**: true, if the coordinates are valid and the field can be attacked. Otherwise, false
+
+# Functions
+
+## startNewGame
+
+> initiates a new game
+> **returns**: a game type with two players
+
+## placeAllShips(player: Player)
+
+> places all ships of the player on random fields on the board
+
+## checkEnd(game: Game) 
+
+> **returns**: 'lose', if all ships of the player are sunk. 'win', if all ships of the computer are sunk. 'not yet' if there are still floating ships on both sides
