@@ -280,15 +280,19 @@ function calcShipRowsAndCols(horVer: 'Horizontal' | 'Vertical', row: number, col
   }
 }
 
-
+// function to handle the dragenter event
 function handleDragEnter() {
+  // get row and column from the ID
   const row: number = Number(this.id.substr(-3, 1));
   const column: number = Number(this.id.substr(-1));
+  // get the shipSpace arrays
   const shipSpace: { cols: number[], rows: number[] } = calcShipRowsAndCols(horVer, row, column);
   // check if the space where the boat should be placed is available
   if (game.player.board._checkIfSpaceIsFree(shipSpace.rows, shipSpace.cols)) {
+    // if the space is available on the board
     for (let i = 0; i < shipSpace.cols.length; i++) {
       const div = document.getElementById(`${game.player.name}-${shipSpace.rows[i]}-${shipSpace.cols[i]}`);
+      // mark the divs on the board
       div.classList.add("bg-green-800");
       div.classList.remove("bg-gray-200", "bg-orange-300");
     }
@@ -296,12 +300,15 @@ function handleDragEnter() {
 }
 
 function handleDragLeave() {
+  // get the row and column from the IDs
   const row: number = Number(this.id.substr(-3, 1));
   const column: number = Number(this.id.substr(-1));
+  // create shipSpace arrays
   const shipSpace: { cols: number[]; rows: number[] } = calcShipRowsAndCols(horVer, row, column);
   // check if the space where the boat should be placed is available
   if (game.player.board._checkIfSpaceIsFree(shipSpace.rows, shipSpace.cols)) {
     for (let i = 0; i < shipSpace.cols.length; i++) {
+      // remove the marks
       const div = document.getElementById(`${game.player.name}-${shipSpace.rows[i]}-${shipSpace.cols[i]}`);
       div.classList.remove("bg-green-800");
       div.classList.add("bg-gray-200");
