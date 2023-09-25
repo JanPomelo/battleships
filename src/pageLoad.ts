@@ -316,20 +316,29 @@ function handleDragLeave() {
   }
 }
 
+// function to handle the drop event
 function handleDrop(e: DragEvent) {
   e.stopPropagation(); // stops the browser from redirecting.
+  // reprint the gameboard
   printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+  // get the div from the ship on the right side of the board
   const draggedShip: HTMLDivElement = document.getElementById(e.dataTransfer.getData("divID")) as HTMLDivElement;
+  // get the shipName
   const shipName: string = draggedShip.id.substring(7);
   const ship: Ship = new Ship(Number(length), horVer, shipName);
   const row: number = Number(this.id.substr(-3, 1));
   const column: number = Number(this.id.substr(-1));
+  // try to place the ship
   if (game.player.board.placeShip(ship, horVer, [row, column]) === undefined) {
+    // if it can be placed, reprint the gameboard
     printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
+    // remove the eventlisteners on the div on the right side of the gameboard
     draggedShip.removeEventListener("dragend", handleDragEnd);
     draggedShip.classList.add("opacity-60");
     draggedShip.draggable = false;
+    // check if all ships were placed
     checkShips();
+    // add eventlisteners to the shipDivs on the gameboard
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
         if (game.player.board.board[i][j]) {
