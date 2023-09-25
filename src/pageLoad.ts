@@ -544,11 +544,15 @@ function compare(a: Ship, b: Ship) {
   return 0;
 }
 
+// function to create the End screen
 export function createEndScreen() {
+  // check if game has ended
   const endCheck: string = checkEnd(game);
+  // if the game has not ended yet, do nothing
   if (endCheck === "not yet") {
     return;
   } else {
+    // else create the div
     const div: HTMLDivElement = document.createElement("div");
     div.classList.add(
       "absolute",
@@ -590,13 +594,13 @@ export function createEndScreen() {
   }
 }
 
+// function to handle the dragRestart
 function handleDragReStart(e: DragEvent) {
   const board: Gameboard = game.player.board;
   const row: number = Number(this.id.substr(-3, 1));
   const column: number = Number(this.id.substr(-1));
   const ship: Ship = board.board[row][column] as Ship;
   length = ship.length;
-  console.log("hello");
   board.removeShip(ship);
   printGameBoard(game.player, document.getElementById("Player") as HTMLDivElement);
   const shipDiv: HTMLDivElement = document.getElementById(`Player-${ship.name}`) as HTMLDivElement;
