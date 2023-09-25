@@ -1,6 +1,7 @@
 # battleships
 
-BattleShip Game for the Odin Project
+BattleShip Game for the Odin Project. Right now, the Computer just does completly random moves since
+I already spent enough time for now on the project. In the future I plan to implement an algorithm to make the computer smarter when he hits a ship.
 
 # Classes
 
