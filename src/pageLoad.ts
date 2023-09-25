@@ -460,7 +460,7 @@ function createHorVerButton(): HTMLDivElement {
   horizontalBut.classList.add("border", "border-black", "px-1", "bg-gray-400", "text-black", "rounded-l", "mb-1");
   verticalBut.classList.add("border", "border-black", "px-1", "bg-white", "text-black", "rounded-r", "mb-1");
 
-  
+  // function to make the ships in the shipsDiv horizontal
   function makeThingsHorizontal() {
     horizontalBut.classList.toggle("bg-gray-400");
     horizontalBut.classList.toggle("bg-white");
@@ -476,7 +476,8 @@ function createHorVerButton(): HTMLDivElement {
       shipsDiv.children[i].classList.toggle("mb-auto");
     }
   }
-
+  
+  // function to make the ships in the shipsDiv vertical
   function makeThingsVertical() {
     horizontalBut.classList.toggle("bg-gray-400");
     horizontalBut.classList.toggle("bg-white");
@@ -492,12 +493,12 @@ function createHorVerButton(): HTMLDivElement {
       shipsDiv.children[i].classList.toggle("mb-auto");
     }
   }
-
   verticalBut.addEventListener("click", makeThingsVertical);
   horizontalBut.addEventListener("click", makeThingsHorizontal);
   return div;
 }
 
+// function to make the ships placable
 function makeShipsPlaceable(player: Player) {
   const boats: HTMLDivElement[] = [];
   boats.push(document.getElementById(`${player.name}-carrier`) as HTMLDivElement);
@@ -513,6 +514,7 @@ function makeShipsPlaceable(player: Player) {
   }
 }
 
+// check if all the player boats are sunk
 function checkSunkStatus(player: Player) {
   const boats: HTMLDivElement[] = [];
   boats.push(document.getElementById(`${player.name}-carrier`) as HTMLDivElement);
@@ -520,9 +522,7 @@ function checkSunkStatus(player: Player) {
   boats.push(document.getElementById(`${player.name}-cruiser`) as HTMLDivElement);
   boats.push(document.getElementById(`${player.name}-submarine`) as HTMLDivElement);
   boats.push(document.getElementById(`${player.name}-destroyer`) as HTMLDivElement);
-
   const playerBoardShipsSorted = player.board.ships.sort(compare);
-
   for (let i = 0; i < playerBoardShipsSorted.length; i++) {
     if (playerBoardShipsSorted[i].isSunk()) {
       for (let j = 0; j < boats[i].children.length; j++) {
@@ -533,6 +533,7 @@ function checkSunkStatus(player: Player) {
   }
 }
 
+// function to compare the ships regarding their length
 function compare(a: Ship, b: Ship) {
   if (a.length < b.length) {
     return 1;
