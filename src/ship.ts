@@ -15,8 +15,8 @@ export class Ship {
     this.direction = direction;
     this.name = name;
   }
-  hit(i: number, j: number) {
-    this.hitCoords.push([i,j])
+  hit(row: number, column: number) {
+    this.hitCoords.push([row, column])
     this.hits++;
     this.isSunk();
   }

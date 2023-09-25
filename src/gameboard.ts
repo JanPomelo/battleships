@@ -56,13 +56,11 @@ export class Gameboard {
         }
       }
     } 
-    console.log('after shipRemove');
     for (let i = 0; i < this.ships.length; i++) {
       if (this.ships[i] === ship) {
         this.ships.splice(i, 1);
       }
     }
-    console.log(this.ships);
   }
 
   // helper function to check if the tiles where the boat should be placed are available or already occupied by another ship
