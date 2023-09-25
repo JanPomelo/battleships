@@ -254,52 +254,55 @@ function handleDragOver(e: DragEvent) {
   return false;
 }
 
-function handleDragEnter(e: DragEvent) {
+// function to calculate ship place in terms of rows and columns the ship will occupy
+function calcShipRowsAndCols(horVer: 'Horizontal' | 'Vertical', row: number, column: number): {cols: number[], rows: number[]} {
   let shipSpaceRows: number[] = [];
   let shipSpaceCols: number[] = [];
-  const row: number = Number(this.id.substr(-3, 1));
-  const column: number = Number(this.id.substr(-1));
   if (horVer === "Horizontal") {
+    // if the ship is placed horizontal, the row will be the constant
     for (let i = 0; i < length; i++) {
       shipSpaceRows.push(row);
     }
+    // and the numbers in the column array are not constant
     shipSpaceCols = game.player.board._createShipPlacementArr(length, column);
   } else {
+    // else the column will be constant
     for (let i = 0; i < length; i++) {
       shipSpaceCols.push(column);
     }
+    // and the numbers in the row array are not constant
     shipSpaceRows = game.player.board._createShipPlacementArr(length, row);
   }
+  // return the column and the row array
+  return {
+    cols: shipSpaceCols,
+    rows: shipSpaceRows
+  }
+}
+
+
+function handleDragEnter() {
+  const row: number = Number(this.id.substr(-3, 1));
+  const column: number = Number(this.id.substr(-1));
+  const shipSpace: { cols: number[], rows: number[] } = calcShipRowsAndCols(horVer, row, column);
   // check if the space where the boat should be placed is available
-  if (game.player.board._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
-    for (let i = 0; i < shipSpaceCols.length; i++) {
-      const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
+  if (game.player.board._checkIfSpaceIsFree(shipSpace.rows, shipSpace.cols)) {
+    for (let i = 0; i < shipSpace.cols.length; i++) {
+      const div = document.getElementById(`${game.player.name}-${shipSpace.rows[i]}-${shipSpace.cols[i]}`);
       div.classList.add("bg-green-800");
       div.classList.remove("bg-gray-200", "bg-orange-300");
     }
   }
 }
 
-function handleDragLeave(e: DragEvent) {
-  let shipSpaceRows: number[] = [];
-  let shipSpaceCols: number[] = [];
+function handleDragLeave() {
   const row: number = Number(this.id.substr(-3, 1));
   const column: number = Number(this.id.substr(-1));
-  if (horVer === "Horizontal") {
-    for (let i = 0; i < length; i++) {
-      shipSpaceRows.push(row);
-    }
-    shipSpaceCols = game.player.board._createShipPlacementArr(length, column);
-  } else {
-    for (let i = 0; i < length; i++) {
-      shipSpaceCols.push(column);
-    }
-    shipSpaceRows = game.player.board._createShipPlacementArr(length, row);
-  }
+  const shipSpace: { cols: number[]; rows: number[] } = calcShipRowsAndCols(horVer, row, column);
   // check if the space where the boat should be placed is available
-  if (game.player.board._checkIfSpaceIsFree(shipSpaceRows, shipSpaceCols)) {
-    for (let i = 0; i < shipSpaceCols.length; i++) {
-      const div = document.getElementById(`${game.player.name}-${shipSpaceRows[i]}-${shipSpaceCols[i]}`);
+  if (game.player.board._checkIfSpaceIsFree(shipSpace.rows, shipSpace.cols)) {
+    for (let i = 0; i < shipSpace.cols.length; i++) {
+      const div = document.getElementById(`${game.player.name}-${shipSpace.rows[i]}-${shipSpace.cols[i]}`);
       div.classList.remove("bg-green-800");
       div.classList.add("bg-gray-200");
     }
