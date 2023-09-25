@@ -440,13 +440,17 @@ function createShipsDiv(player: Player): HTMLDivElement {
   return div;
 }
 
+// function to create the Horizontal Vertical switch Button
 function createHorVerButton(): HTMLDivElement {
+  // create element
   const div: HTMLDivElement = document.createElement("div");
   div.id = "buttonDiv";
   horVer = "Horizontal";
+  // create Horizontal button
   const horizontalBut: HTMLButtonElement = document.createElement("button");
   horizontalBut.id = "hori";
   horizontalBut.innerText = "Horizontal";
+  // create Vertical button
   const verticalBut: HTMLButtonElement = document.createElement("button");
   verticalBut.id = "verti";
   verticalBut.innerText = "Vertical";
@@ -456,6 +460,7 @@ function createHorVerButton(): HTMLDivElement {
   horizontalBut.classList.add("border", "border-black", "px-1", "bg-gray-400", "text-black", "rounded-l", "mb-1");
   verticalBut.classList.add("border", "border-black", "px-1", "bg-white", "text-black", "rounded-r", "mb-1");
 
+  
   function makeThingsHorizontal() {
     horizontalBut.classList.toggle("bg-gray-400");
     horizontalBut.classList.toggle("bg-white");
