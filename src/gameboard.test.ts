@@ -4,7 +4,7 @@ import { Ship } from "./ship";
 describe("Ship Placement test", () => {
   test("Place Ship Horizontal on GameBoard in Middle", () => {
     const gameBoard = new Gameboard();
-    const carrier = new Ship(5);
+    const carrier = new Ship(5, 'Horizontal', 'carrier');
     gameBoard.placeShip(carrier, "Horizontal", [2, 3]);
     expect(gameBoard.board[2][1]).toEqual(carrier);
     expect(gameBoard.board[2][2]).toEqual(carrier);
@@ -15,7 +15,7 @@ describe("Ship Placement test", () => {
 
   test("Place Ship Horizontal on GameBoard - CornerCase 1", () => {
     const gameBoard = new Gameboard();
-    const carrier = new Ship(5);
+    const carrier = new Ship(5, 'Horizontal', 'carrier');
     gameBoard.placeShip(carrier, "Horizontal", [0, 0]);
     expect(gameBoard.board[0][0]).toEqual(carrier);
     expect(gameBoard.board[0][1]).toEqual(carrier);
@@ -25,7 +25,7 @@ describe("Ship Placement test", () => {
   });
   test("Place Ship horizontal on GameBoard - CornerCase 2", () => {
     const gameBoard = new Gameboard();
-    const carrier = new Ship(5);
+    const carrier = new Ship(5, 'Horizontal', 'carrier');
     gameBoard.placeShip(carrier, "Horizontal", [0, 9]);
     expect(gameBoard.board[0][5]).toEqual(carrier);
     expect(gameBoard.board[0][6]).toEqual(carrier);
@@ -36,7 +36,7 @@ describe("Ship Placement test", () => {
 
   test("Place Ship vertical on GameBoard in Middle", () => {
     const gameBoard = new Gameboard();
-    const carrier = new Ship(5);
+    const carrier = new Ship(5, 'Vertical', 'carrier');
     gameBoard.placeShip(carrier, "Vertical", [2, 3]);
     expect(gameBoard.board[0][3]).toEqual(carrier);
     expect(gameBoard.board[1][3]).toEqual(carrier);
@@ -47,7 +47,7 @@ describe("Ship Placement test", () => {
 
   test("Place Ship vertical on GameBoard - CornerCase 1", () => {
     const gameBoard = new Gameboard();
-    const carrier = new Ship(5);
+    const carrier = new Ship(5, 'Vertical', 'carrier');
     gameBoard.placeShip(carrier, "Vertical", [0, 0]);
     expect(gameBoard.board[0][0]).toEqual(carrier);
     expect(gameBoard.board[1][0]).toEqual(carrier);
@@ -57,7 +57,7 @@ describe("Ship Placement test", () => {
   });
   test("Place Ship vertical on GameBoard - CornerCase 2", () => {
     const gameBoard = new Gameboard();
-    const carrier = new Ship(5);
+    const carrier = new Ship(5, "Vertical", "carrier");
     gameBoard.placeShip(carrier, "Vertical", [9, 0]);
     expect(gameBoard.board[5][0]).toEqual(carrier);
     expect(gameBoard.board[6][0]).toEqual(carrier);
@@ -68,7 +68,7 @@ describe("Ship Placement test", () => {
 
   test("Place 4-tile Ship", () => {
     const gameBoard = new Gameboard();
-    const carrier = new Ship(4);
+    const carrier = new Ship(4, "Vertical", "carrier");
     gameBoard.placeShip(carrier, "Vertical", [9, 0]);
     expect(gameBoard.board[5][0]).toEqual(null);
     expect(gameBoard.board[6][0]).toEqual(carrier);
@@ -79,7 +79,7 @@ describe("Ship Placement test", () => {
 
   test("Place 3-tile Ship", () => {
     const gameBoard = new Gameboard();
-    const carrier = new Ship(3);
+    const carrier = new Ship(3, "Horizontal", "carrier");
     gameBoard.placeShip(carrier, "Horizontal", [0, 0]);
     expect(gameBoard.board[0][0]).toEqual(carrier);
     expect(gameBoard.board[0][1]).toEqual(carrier);
@@ -89,7 +89,7 @@ describe("Ship Placement test", () => {
 
   test("Place 2-tile Ship", () => {
     const gameBoard = new Gameboard();
-    const carrier = new Ship(2);
+    const carrier = new Ship(2, "Horizontal", "carrier");
     gameBoard.placeShip(carrier, "Horizontal", [0, 9]);
     expect(gameBoard.board[0][7]).toEqual(null);
     expect(gameBoard.board[0][8]).toEqual(carrier);
@@ -98,15 +98,15 @@ describe("Ship Placement test", () => {
 
   test("Check double placement Error", () => {
     const gameBoard = new Gameboard();
-    const uBoot = new Ship(3);
-    const mini = new Ship(2);
+    const uBoot = new Ship(3, "Horizontal", "carrier");
+    const mini = new Ship(2, "Horizontal", "carrier");
     gameBoard.placeShip(uBoot, "Horizontal", [0, 9]);
     expect(gameBoard.placeShip(mini, "Horizontal", [0, 9])).toEqual(Error("Space is not available!"));
   });
 
   test("Check if hits call is valid other several tales", () => {
     const gameBoard = new Gameboard();
-    const uBoot = new Ship(3);
+    const uBoot = new Ship(3, "Horizontal", "carrier");
     gameBoard.placeShip(uBoot, "Horizontal", [0, 9]);
   });
 });
@@ -120,7 +120,7 @@ describe("receiveAttack tests", () => {
   
   test("check if an attack is received on a ship", () => {
     const gameBoard = new Gameboard();
-    const mini = new Ship(2);
+    const mini = new Ship(2, "Horizontal", "carrier");
     gameBoard.placeShip(mini, 'Horizontal', [0, 0]);
     gameBoard.receiveAttack([0, 0]);
     expect(gameBoard.board[0][0]).toEqual("Hit");
@@ -129,7 +129,7 @@ describe("receiveAttack tests", () => {
 
   test("check for double shot on the same field", () => {
     const gameBoard = new Gameboard();
-    const mini = new Ship(2);
+    const mini = new Ship(2, "Horizontal", "carrier");
     gameBoard.placeShip(mini, 'Horizontal', [0, 0]);
     gameBoard.receiveAttack([0, 0]);
     expect(gameBoard.receiveAttack([0, 0])).toEqual(Error('Field 0,0 has already been checked'));
@@ -137,7 +137,7 @@ describe("receiveAttack tests", () => {
 
   test("check for ship to sink when fully hit", () => {
     const gameBoard = new Gameboard();
-    const mini = new Ship(2);
+    const mini = new Ship(2, "Horizontal", "carrier");
     gameBoard.placeShip(mini, 'Horizontal', [0, 0]);
     gameBoard.receiveAttack([0, 0]);
     gameBoard.receiveAttack([0, 1]);
@@ -146,8 +146,8 @@ describe("receiveAttack tests", () => {
 
   test('check if all ships on the board are sunk', () => {
     const gameBoard = new Gameboard();
-    const mini = new Ship(2);
-    const maxi = new Ship(5);
+    const mini = new Ship(2, "Horizontal", "carrier");
+    const maxi = new Ship(5, "Horizontal", "carrier");
     gameBoard.placeShip(mini, 'Horizontal', [0, 0]);
     gameBoard.placeShip(maxi, "Horizontal", [9, 9]);
     gameBoard.receiveAttack([0, 0]);

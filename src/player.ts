@@ -1,14 +1,13 @@
 "use strict";
-import { endGame } from "./game";
 import { Gameboard } from "./gameboard";
-import { Ship } from "./ship";
+import { printGameBoard } from "./UserInterface";
+
 export class Player {
   private gameBoard: Gameboard;
-  private playerName: string;
-
+  name: string;
   constructor(name: string) {
     this.gameBoard = new Gameboard();
-    this.playerName = name;
+    this.name = name;
   }
 
   get name() {
@@ -56,7 +55,6 @@ export class Player {
         let column = Math.floor(Math.random() * 10);
         computerResponse = player.board.receiveAttack([row, column]);
       } while (computerResponse != undefined);
-      
       return true;
     }
     let playerResponse = player.board.receiveAttack(coords);

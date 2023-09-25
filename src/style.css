@@ -1,50 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap");
 
 html {
-  font-family: "Amatic SC", cursive;
+  font-family: "Bangers";
+  color: white;
 }
 
-.battleGrid {
+main {
+  font-family: 'Crimson Text';
+}
+
+.playGround {
   display: grid;
-  grid-template-columns: repeat(10, 22px);
-  grid-template-rows: repeat(10, 22px);
-  width: fit-content;
-  background-color: #5a5a5a;
-  gap: 1px;
-  border: 7px grey inset;
+  grid-template-rows: repeat(10, 4.3vw);
+  grid-template-columns: repeat(10, 4.3vw);
+   border: 3px black solid;
   border-radius: 0.5rem;
+  gap: 1px
+}
+.boat {
+  padding: 2px;
+  gap: 2px;
+  margin-right: auto;
 }
 
-img {
-  mix-blend-mode: multiply;
+.miniDiv {
+  width: 4.3vw;
+  height: 4.3vw;
 }
 
-.bg-red-300 {
-  background-color: rgba(255, 114, 118, 0.7);
+.over {
+  opacity: 0.6;
 }
 
-.bg-blue-300 {
-  background-color: rgba(173, 216, 230, 0.9);
+.endGameScreen {
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  top: 0;
+  bottom: 0;
+  margin: auto; 
+  width: 200px; /* Need a specific value to work */
+  height: 140px;
+  z-index: 99;
 }
 
-.backgroundIMG {
-  width: 100%;
-  height: 100%;
+
+#bgIMG {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -2;
+  height: 100%;
+  object-fit: cover;
+  z-index: -99;
 }
 
-.boatsens {
-  width: 22px;
-  height: 22px;
+@media screen and (max-width: 280px) {
+  html {
+    font-size: small;
+  }
 }
 
-#boatPanel {
-  border: 7px grey inset;
-  border-radius: 0.5rem;
+@media only screen and (min-width: 600px) {
+  #bgIMG {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 587px) and (max-width: 700px) {
+  .miniDiv {
+    height: 4vw;
+    width: 4vw;
+  }
+  .playGround {
+  display: grid;
+  grid-template-rows: repeat(10, 4vw);
+  grid-template-columns: repeat(10, 4vw);
+}
+}
+
+@media only screen and (min-width: 701px) and (max-width: 900px) {
+  .miniDiv {
+    height: 3vw;
+    width: 3vw;
+  }
+  .playGround {
+  display: grid;
+  grid-template-rows: repeat(10, 3vw);
+  grid-template-columns: repeat(10, 3vw);
+}
+}
+
+@media only screen and (min-width: 901px) {
+  .miniDiv {
+    height: 3vh;
+    width: 3vh;
+  }
+  .playGround {
+  display: grid;
+  grid-template-rows: repeat(10, 3vh);
+  grid-template-columns: repeat(10, 3vh);
+}
 }

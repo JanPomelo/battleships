@@ -47,8 +47,26 @@ export class Gameboard {
     }
     this.ships.push(ship);
   }
+
+  removeShip(ship: Ship) {
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        if (this.board[i][j] === ship) {
+          this.board[i][j] = null;
+        }
+      }
+    } 
+    console.log('after shipRemove');
+    for (let i = 0; i < this.ships.length; i++) {
+      if (this.ships[i] === ship) {
+        this.ships.splice(i, 1);
+      }
+    }
+    console.log(this.ships);
+  }
+
   // helper function to check if the tiles where the boat should be placed are available or already occupied by another ship
-  private _checkIfSpaceIsFree(row: number[], col: number[]) {
+  _checkIfSpaceIsFree(row: number[], col: number[]) {
     for (let i = 0; i < row.length; i++) {
       if (this.board[row[i]][col[i]] != null) {
         return false;
@@ -58,7 +76,7 @@ export class Gameboard {
   }
 
   // helper function to cover all corner cases for the variable row/column (if the ship is placed on the outer tiles)
-  private _createShipPlacementArr(shipLength: number, coordPoint: number): number[] {
+  _createShipPlacementArr(shipLength: number, coordPoint: number): number[] {
     const placementArr: number[] = [];
     if (shipLength === 5) {
       if (coordPoint < 2) {
@@ -102,8 +120,8 @@ export class Gameboard {
     }
     if (this.board[coords[0]][coords[1]] instanceof Ship) {
       const ship: Ship = this.board[coords[0]][coords[1]] as Ship;
-      ship.hit();
-      this.board[coords[0]][coords[1]] = "Hit";
+      ship.hit(coords[0],coords[1]);
+      //this.board[coords[0]][coords[1]] = "Hit";
       return;
     }
     const err = new Error(`Field ${coords[0]},${coords[1]} has already been checked`);
@@ -113,7 +131,7 @@ export class Gameboard {
   allSunk(): boolean {
     for (let i = 0; i < this.ships.length; i++) {
       if (!this.ships[i].isSunk()) {
-        console.log(this.ships[i]);
+        
         return false;
       }
     }
