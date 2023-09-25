@@ -352,8 +352,11 @@ function handleDrop(e: DragEvent) {
   return false;
 }
 
+// function to check if all ships are placed so far and initiating the gamestart if thats the case
 export function checkShips() {
+  // if all ships are placed
   if (game.player.board.ships.length > 4) {
+    // make the ships on the right side of the gameboard be horizontal again
     const shipsDiv = document.getElementById("shipsDiv");
     shipsDiv.classList.remove("mb-auto");
     shipsDiv.classList.add("flex-col");
@@ -362,16 +365,21 @@ export function checkShips() {
       shipsDiv.children[i].classList.remove("mb-auto");
       shipsDiv.children[i].classList.remove("opacity-60");
     }
+    // add the onclick event to receive an attack on the enemy board
     const gameBoardDiv: HTMLDivElement = document.getElementById("Enemy") as HTMLDivElement;
     addOnClickToEnemyBoard(gameBoardDiv);
+    // add the shipsDiv on the right side of the enemy gameboard
     const div: HTMLDivElement = document.getElementById("Enemy-subDiv") as HTMLDivElement;
     div.appendChild(createShipsDiv(game.computer));
+    // remove the hori/verti buttons from the document
     const buttonDiv: HTMLDivElement = document.getElementById("buttonDiv") as HTMLDivElement;
     buttonDiv.remove();
+    // change the text in the intro paragraph
     const introParagraph: HTMLParagraphElement = document.getElementById("introPar") as HTMLParagraphElement;
     introParagraph.innerText = `Okay, let's go Captain! Lets crush our enemy!`;
   }
 }
+
 
 function createShipsDiv(player: Player): HTMLDivElement {
   const div: HTMLDivElement = document.createElement("div");
