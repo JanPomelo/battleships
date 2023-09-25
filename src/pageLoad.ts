@@ -380,11 +380,13 @@ export function checkShips() {
   }
 }
 
-
+// function to create the ship overview div on the right side of the gameboard
 function createShipsDiv(player: Player): HTMLDivElement {
+  // create Element
   const div: HTMLDivElement = document.createElement("div");
   div.id = "shipsDiv";
   div.classList.add("flex", "flex-col", "gap-1", "sm:gap-3", "flex-wrap", "sm:flex-nowrap");
+  // create carrier div
   const carrier: HTMLDivElement = document.createElement("div");
   carrier.classList.add("flex", "boat", "bg-black");
   for (let i = 0; i < 5; i++) {
@@ -394,6 +396,7 @@ function createShipsDiv(player: Player): HTMLDivElement {
   }
   carrier.id = `${player.name}-carrier`;
   div.appendChild(carrier);
+  // create battleship div
   const battleship: HTMLDivElement = document.createElement("div");
   battleship.classList.add("flex", "boat", "bg-black");
   for (let i = 0; i < 4; i++) {
@@ -403,6 +406,7 @@ function createShipsDiv(player: Player): HTMLDivElement {
   }
   battleship.id = `${player.name}-battleship`;
   div.appendChild(battleship);
+  // create cruiser div
   const cruiser: HTMLDivElement = document.createElement("div");
   cruiser.classList.add("flex", "boat", "bg-black");
   for (let i = 0; i < 3; i++) {
@@ -412,6 +416,7 @@ function createShipsDiv(player: Player): HTMLDivElement {
   }
   cruiser.id = `${player.name}-cruiser`;
   div.appendChild(cruiser);
+  // create submarine div
   const submarine: HTMLDivElement = document.createElement("div");
   submarine.classList.add("flex", "boat", "bg-black");
   for (let i = 0; i < 3; i++) {
@@ -421,6 +426,7 @@ function createShipsDiv(player: Player): HTMLDivElement {
   }
   submarine.id = `${player.name}-submarine`;
   div.appendChild(submarine);
+  // create destroyer div
   const destroyer: HTMLDivElement = document.createElement("div");
   destroyer.classList.add("flex", "boat", "bg-black");
   for (let i = 0; i < 2; i++) {
