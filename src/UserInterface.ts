@@ -28,8 +28,8 @@ export function createGameDiv(): void {
     "flex-grow"
   );
   // -- create child elements //
-  const computerBoard: HTMLDivElement = loadPlayerDiv(game.computer, "Enemy");
-  const playerBoard: HTMLDivElement = loadPlayerDiv(game.player, "You");
+  const computerBoard: HTMLDivElement = createPlayerDiv(game.computer, "Enemy");
+  const playerBoard: HTMLDivElement = createPlayerDiv(game.player, "You");
 
   // append child elements to elements
   div.appendChild(computerBoard);
@@ -41,7 +41,7 @@ export function createGameDiv(): void {
 }
 
 // function to create the player div including the gameboard and the ships on the right side of it
-function loadPlayerDiv(player: Player, name: String): HTMLDivElement {
+function createPlayerDiv(player: Player, name: String): HTMLDivElement {
   // element divider //
   const div: HTMLDivElement = document.createElement("div");
   div.classList.add("p-2", "bg-black/30", "rounded-xl", "flex-grow");
@@ -65,7 +65,7 @@ function loadPlayerDiv(player: Player, name: String): HTMLDivElement {
   subDiv.id = `${player.name}-subDiv`;
   subDiv.classList.add("flex", "gap-3");
   // append granchild elements to child element
-  subDiv.appendChild(loadGameBoard(player));
+  subDiv.appendChild(createGameBoard(player));
   if (player.name === "Player") subDiv.appendChild(createShipsDiv(player));
   // append child elements to element
   div.appendChild(headingdiv);
@@ -74,7 +74,7 @@ function loadPlayerDiv(player: Player, name: String): HTMLDivElement {
 }
 
 // function to load GameBoard initially
-function loadGameBoard(player: Player): HTMLDivElement {
+function createGameBoard(player: Player): HTMLDivElement {
   // element divider //
   const div: HTMLDivElement = document.createElement("div");
   div.id = player.name;
