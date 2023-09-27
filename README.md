@@ -1,7 +1,6 @@
 # battleships
 
-BattleShip Game for the Odin Project. Right now, the Computer just does completly random moves since
-I already spent enough time for now on the project. In the future I plan to implement an algorithm to make the computer smarter when he hits a ship.
+BattleShip Game for the Odin Project.
 
 # Classes
 
@@ -80,6 +79,7 @@ I already spent enough time for now on the project. In the future I plan to impl
 
 > **name**: string - name of the player
 > **gameBoard**: Gameboard - the board of the player
+> **allKnownPositions**: number[][] - array with all known coordinates
 
 ### Methods
 
@@ -89,7 +89,7 @@ I already spent enough time for now on the project. In the future I plan to impl
 
 #### makeMove(coords: number[] | null, player: Player)
 
-> attacks the other players board at the given coordinates
+> attacks the other players board at the given coordinates. If no coords are given, hits a random point on the board. If a hit is detected, try to hit adjected fields until the ship is sunk
 > **returns**: true, if the coordinates are valid and the field can be attacked. Otherwise, false
 
 # Functions
